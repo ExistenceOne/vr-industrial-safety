@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9d93495c52057fb46bc81ce86086d627
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 26193
+  packageName: TV Set
+  packageVersion: 1.0
+  assetPath: Assets/_Television_set/Sources/Cubemap.cubemap
+  uploadId: 43628

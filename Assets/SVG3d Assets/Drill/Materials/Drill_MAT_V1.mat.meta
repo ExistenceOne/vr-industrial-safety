@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 80160d8ff442aa64d9c663de5d382b92
+timeCreated: 1534278081
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 48176
+  packageName: Cordless Drill
+  packageVersion: 1.2
+  assetPath: Assets/SVG3d Assets/Drill/Materials/Drill_MAT_V1.mat
+  uploadId: 262341

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: cc834fe10857e0a48971cc368056998a
+timeCreated: 1534278360
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 48176
+  packageName: Cordless Drill
+  packageVersion: 1.2
+  assetPath: Assets/SVG3d Assets/Drill/Prefab/Drill_V1.prefab
+  uploadId: 262341
