@@ -1,11 +1,16 @@
 using UnityEngine;
+using System.Collections;
 
 public class RayVRButton : MonoBehaviour
 {
     [Header("Button Color")]
     public Color normalColor = Color.red;
+    public Color blinkColor = Color.cyan;
     public Color hoverColor = Color.yellow;
     public Color pressedColor = Color.green;
+
+    [Header("Blink Settings")]
+    public float blinkSpeed = 2.0f;
 
     [Header("Button Movement")]
     public Transform buttonVisual;
@@ -34,6 +39,7 @@ public class RayVRButton : MonoBehaviour
     private Vector3 targetLocalPosition;
 
     private bool isPressed = false;
+    private Coroutine blinkCoroutine;
 
     private void Awake()
     {
@@ -66,7 +72,7 @@ public class RayVRButton : MonoBehaviour
         initialLocalPosition = buttonVisual.localPosition;
         targetLocalPosition = initialLocalPosition;
 
-        SetColor(normalColor);
+        //SetColor(normalColor);
 
         if (screenObject != null)
         {
@@ -95,6 +101,11 @@ public class RayVRButton : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        StartBlinking();    // 씬이 시작되면 깜빡임 연출 시작
+    }
+
     private void Update()
     {
         if (buttonVisual == null) return;
@@ -112,6 +123,7 @@ public class RayVRButton : MonoBehaviour
 
         if (isPressed) return;
 
+        StopBlinking();     // 레이저를 올리면 깜빡임 멈춤
         SetColor(hoverColor);
     }
 
@@ -121,7 +133,8 @@ public class RayVRButton : MonoBehaviour
 
         if (isPressed) return;
 
-        SetColor(normalColor);
+        StartBlinking();    // 레이저를 치우면 다시 깜빡임 시작
+        //SetColor(normalColor);
     }
 
     public void OnRaySelect()
@@ -154,6 +167,7 @@ public class RayVRButton : MonoBehaviour
     {
         isPressed = true;
 
+        StopBlinking();
         SetColor(pressedColor);
 
         targetLocalPosition = initialLocalPosition + pressedLocalOffset;
@@ -185,7 +199,7 @@ public class RayVRButton : MonoBehaviour
     {
         isPressed = false;
 
-        SetColor(normalColor);
+        //SetColor(normalColor);
 
         targetLocalPosition = initialLocalPosition;
 
@@ -209,6 +223,44 @@ public class RayVRButton : MonoBehaviour
         {
             attentionEffect.SetActive(true);
             DebugLog("attentionEffect 활성화됨: " + attentionEffect.name);
+        }
+
+        StartBlinking();
+    }
+
+    // 깜빡임 코루틴 시작 함수
+    private void StartBlinking()
+    {
+        if (blinkCoroutine == null && buttonRenderer != null)
+        {
+            blinkCoroutine = StartCoroutine(BlinkRoutine());
+            DebugLog("깜빡임 시작");
+        }
+    }
+
+    // 깜빡임 코루틴 정지 함수
+    private void StopBlinking()
+    {
+        if (blinkCoroutine != null)
+        {
+            StopCoroutine(blinkCoroutine);
+            blinkCoroutine = null;
+        }
+    }
+
+    // 부드러운 색상 변환 코루틴 로직
+    private IEnumerator BlinkRoutine()
+    {
+        while (true)
+        {
+            float lerpValue = Mathf.PingPong(Time.time * blinkSpeed, 1f);
+
+            if (buttonRenderer != null)
+            {
+                buttonRenderer.material.color = Color.Lerp(normalColor, blinkColor, lerpValue);
+            }
+
+            yield return null;
         }
     }
 
