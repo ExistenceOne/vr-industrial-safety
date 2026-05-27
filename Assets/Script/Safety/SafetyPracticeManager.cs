@@ -10,7 +10,8 @@ public class SafetyPracticeManager : MonoBehaviour
     {
         None,
         Hammer,
-        Drill
+        Drill,
+        Grinder
     }
 
     [Header("Practice Type")]
@@ -30,6 +31,10 @@ public class SafetyPracticeManager : MonoBehaviour
     [Header("Drill Guide")]
     [SerializeField] private string drillGuideMessage = "보호구 착용 완료! 드릴을 작동한 뒤 작업물을 천천히 접촉하십시오.";
     [SerializeField] private float delayBeforeDrillGuideToast = 2.2f;
+
+    [Header("Grinder Guide")]
+    [SerializeField] private string grinderGuideMessage = "보호구 착용 완료! 방호덮개를 확인하고 그라인더를 사용하십시오.";
+    [SerializeField] private float delayBeforeGrinderGuideToast = 2.2f;
 
     [Header("Failure Settings")]
     [SerializeField] private string noGloveFailMessage = "보호구 미착용! 안전수칙 위반으로 실습에 실패했습니다.";
@@ -150,6 +155,20 @@ public class SafetyPracticeManager : MonoBehaviour
                 Debug.Log("[SafetyPracticeManager] 드릴 실습 안내 토스트 출력");
             }
         }
+        else if (practiceType == PracticeType.Grinder)
+        {
+            yield return new WaitForSeconds(delayBeforeGrinderGuideToast);
+
+            if (toastController != null)
+            {
+                toastController.ShowNormalToast(grinderGuideMessage, toastShowTime);
+            }
+
+            if (showDebugLog)
+            {
+                Debug.Log("[SafetyPracticeManager] 그라인더 실습 안내 토스트 출력");
+            }
+        }
 
         guideRoutine = null;
     }
@@ -161,6 +180,16 @@ public class SafetyPracticeManager : MonoBehaviour
 
         if (isGloveEquipped)
             return false;
+
+        StartCoroutine(FailRoutine());
+        return true;
+    }
+
+    // 장갑 착용 여부와 무관하게 항상 실패 처리 (그라인더 날 접촉 등 즉사 사고)
+    public bool TryFailAlways()
+    {
+        if (isFailing)
+            return true;
 
         StartCoroutine(FailRoutine());
         return true;
