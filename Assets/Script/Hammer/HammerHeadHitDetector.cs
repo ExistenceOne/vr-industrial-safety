@@ -16,17 +16,44 @@ public class HammerHeadHitDetector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (hammerController != null)
-        {
-            hammerController.TryHammerHit(other);
-        }
+        HandleHit(other);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        HandleHit(other);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (hammerController != null)
+        HandleHit(collision.collider);
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        HandleHit(collision.collider);
+    }
+
+    private void HandleHit(Collider other)
+    {
+        if (hammerController == null)
+            return;
+
+        bool isValidHit = hammerController.TryHammerHit(other);
+
+        if (!isValidHit)
+            return;
+
+        NailHitController nail = other.GetComponent<NailHitController>();
+
+        if (nail == null)
         {
-            hammerController.TryHammerHit(collision.collider);
+            nail = other.GetComponentInParent<NailHitController>();
+        }
+
+        if (nail != null)
+        {
+            nail.OnHitByHammer(transform);
         }
     }
 }

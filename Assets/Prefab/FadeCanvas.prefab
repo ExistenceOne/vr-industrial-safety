@@ -100,7 +100,6 @@ GameObject:
   - component: {fileID: 91872073033405577}
   - component: {fileID: 7363870129843425473}
   - component: {fileID: 3400236860006744859}
-  - component: {fileID: 6591275966048518759}
   m_Layer: 5
   m_Name: FadeCanvas
   m_TagString: Untagged
@@ -191,16 +190,3 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &6591275966048518759
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 393208901805989108}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f64853df817d1640aa38ab5a05470e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayFadeOut
-  FadePanel: {fileID: 6360247338058421275}
