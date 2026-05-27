@@ -648,6 +648,60 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 416426042}
   m_CullTransparentMesh: 1
+--- !u!1 &470271868
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 470271869}
+  - component: {fileID: 470271870}
+  m_Layer: 0
+  m_Name: BladeHazardZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &470271869
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470271868}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.00013679267, y: 0.0001051724, z: 0.6094685, w: 0.7928103}
+  m_LocalPosition: {x: 0.0076, y: 0.0002, z: -0}
+  m_LocalScale: {x: 0.010000001, y: 0.01, z: 0.01}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4318611360631279250}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &470271870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470271868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b863777bf2a7cd946817a30a76917f6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrinderHandAccidentDetector
+  grinderController: {fileID: 0}
+  bloodEffectPrefab: {fileID: 0}
+  bloodAudioSource: {fileID: 0}
+  bloodSoundClip: {fileID: 0}
+  handTags:
+  - Hand
+  - LeftHand
+  - RightHand
+  detectByHandGripAnimator: 1
+  showDebugLog: 1
 --- !u!1001 &525128605
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6754,7 +6808,10 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 4638027288997244981, guid: 9c38f8744e3d2cd4daabf2da8c39a3b8, type: 3}
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3699816150078423612, guid: 9c38f8744e3d2cd4daabf2da8c39a3b8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 470271869}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6133853567875699956, guid: 9c38f8744e3d2cd4daabf2da8c39a3b8, type: 3}
       insertIndex: -1
@@ -6763,6 +6820,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 3030431238742485400}
   m_SourcePrefab: {fileID: 100100000, guid: 9c38f8744e3d2cd4daabf2da8c39a3b8, type: 3}
+--- !u!4 &4318611360631279250 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3699816150078423612, guid: 9c38f8744e3d2cd4daabf2da8c39a3b8, type: 3}
+  m_PrefabInstance: {fileID: 4318611360631279249}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6901602398089227799
 PrefabInstance:
   m_ObjectHideFlags: 0

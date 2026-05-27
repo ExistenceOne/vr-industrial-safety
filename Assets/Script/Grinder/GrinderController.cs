@@ -87,6 +87,9 @@ public class GrinderController : MonoBehaviour
     // 월드 기준 원통 중심
     private Vector3 WorldCenter => transform.TransformPoint(centerOffset);
 
+    public bool IsGrabbed => isGrabbed;
+    public bool IsActive => isActive;
+
     // ═══════════════════════════════════════════════
     // 초기화
     // ═══════════════════════════════════════════════
