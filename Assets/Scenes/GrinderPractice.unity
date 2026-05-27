@@ -692,15 +692,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b863777bf2a7cd946817a30a76917f6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrinderHandAccidentDetector
-  grinderController: {fileID: 0}
-  bloodEffectPrefab: {fileID: 0}
-  bloodAudioSource: {fileID: 0}
-  bloodSoundClip: {fileID: 0}
-  handTags:
-  - Hand
-  - LeftHand
-  - RightHand
-  detectByHandGripAnimator: 1
+  grinderController: {fileID: 3030431238742485400}
+  leftHandTransform: {fileID: 1515929367}
+  rightHandTransform: {fileID: 1148525545}
+  bloodEffectPrefab: {fileID: 3723186245368743947, guid: a46e58915c3fa5b4f9fd597d3355860a, type: 3}
+  bloodAudioSource: {fileID: 3030431238742485401}
+  bloodSoundClip: {fileID: 8300000, guid: 3460f54429dadcc48ae74fed7f93f104, type: 3}
   showDebugLog: 1
 --- !u!1001 &525128605
 PrefabInstance:
@@ -804,6 +801,59 @@ CanvasGroup:
   m_CorrespondingSourceObject: {fileID: 3191921329113292639, guid: 40b6f4bea3a2cac4dab09212b7747f35, type: 3}
   m_PrefabInstance: {fileID: 525128605}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &647235932
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 647235933}
+  - component: {fileID: 647235934}
+  m_Layer: 6
+  m_Name: FaceCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &647235933
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647235932}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1443168652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &647235934
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647235932}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.15
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &948516572
 GameObject:
   m_ObjectHideFlags: 0
@@ -1135,6 +1185,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 86e65480d18de5f48bab951314ce8b97, type: 3}
+--- !u!4 &1148525545 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8133616708293198380, guid: b71387b5536f352419b8518e64d4e9da, type: 3}
+  m_PrefabInstance: {fileID: 1443168651}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1443168651
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1189,9 +1244,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3215633288554560210, guid: b71387b5536f352419b8518e64d4e9da, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 647235933}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b71387b5536f352419b8518e64d4e9da, type: 3}
+--- !u!4 &1443168652 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3215633288554560210, guid: b71387b5536f352419b8518e64d4e9da, type: 3}
+  m_PrefabInstance: {fileID: 1443168651}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1480234940
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1312,6 +1375,11 @@ PrefabInstance:
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7910050132083414747, guid: 2c11370519997924f904cdbe06d3b85c, type: 3}
   m_PrefabInstance: {fileID: 1480234940}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1515929367 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4185573634417019672, guid: b71387b5536f352419b8518e64d4e9da, type: 3}
+  m_PrefabInstance: {fileID: 1443168651}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1602375283
 GameObject:
@@ -1768,6 +1836,7 @@ GameObject:
   - component: {fileID: 2126215781}
   - component: {fileID: 2126215783}
   - component: {fileID: 2126215782}
+  - component: {fileID: 2126215784}
   m_Layer: 0
   m_Name: WoodParticleSystem
   m_TagString: Untagged
@@ -5456,9 +5525,9 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 0
+    enabled: 1
     serializedVersion: 4
-    type: 0
+    type: 1
     collisionMode: 0
     colliderForce: 0
     multiplyColliderForceByParticleSize: 0
@@ -5629,11 +5698,11 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 4294967295
+      m_Bits: 64
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
-    collisionMessages: 0
+    collisionMessages: 1
     collidesWithDynamic: 1
     interiorCollisions: 0
   TriggerModule:
@@ -6593,6 +6662,23 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!114 &2126215784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126215780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d8597eff8c5dc646acf8df157ba979c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GrinderSparkAccidentDetector
+  grinderController: {fileID: 3030431238742485400}
+  faceLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  showDebugLog: 1
 --- !u!4 &1232452334367649079 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1092366334696591046, guid: 9c38f8744e3d2cd4daabf2da8c39a3b8, type: 3}
