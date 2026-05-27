@@ -135,16 +135,16 @@ public class HammerMotionHapticController : MonoBehaviour
         }
     }
 
-    public void TryHammerHit(Collider hitCollider)
+    public bool TryHammerHit(Collider hitCollider)
     {
         if (!isGrabbed)
-            return;
+            return false;
 
         if (Time.time - lastHitTime < hitCooldown)
-            return;
+            return false;
 
         if (onlyHitTargetTag && !hitCollider.CompareTag(targetTag))
-            return;
+            return false;
 
         if (currentHeadSpeed < minHitSpeed)
         {
@@ -153,7 +153,7 @@ public class HammerMotionHapticController : MonoBehaviour
                 Debug.Log("[HammerMotionHapticController] 타격 속도 부족: " + currentHeadSpeed.ToString("F2"));
             }
 
-            return;
+            return false;
         }
 
         lastHitTime = Time.time;
@@ -168,6 +168,8 @@ public class HammerMotionHapticController : MonoBehaviour
                       + " / 대상: "
                       + hitCollider.name);
         }
+
+        return true;
     }
 
     private void PlayHammerHitSound()

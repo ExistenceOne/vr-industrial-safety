@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Anchor
+  - DrillCube
   layers:
   - Default
   - TransparentFX

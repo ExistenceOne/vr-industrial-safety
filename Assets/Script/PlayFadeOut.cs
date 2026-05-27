@@ -6,7 +6,7 @@ public class PlayFadeOut : MonoBehaviour
 {
     public static PlayFadeOut Instance { get; private set; }
 
-    [Tooltip("ÆäÀÌµå¾Æ¿ôÀ» Àû¿ëÇÒ CanvasGroupÀÌ ´Þ¸° ÆÐ³ÎÀ» ³ÖÀ¸¼¼¿ä")]
+    [Tooltip("ï¿½ï¿½ï¿½Ìµï¿½Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ CanvasGroupï¿½ï¿½ ï¿½Þ¸ï¿½ ï¿½Ð³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public CanvasGroup FadePanel;
     private float fadeDuration = 2.0f;
 
@@ -15,10 +15,10 @@ public class PlayFadeOut : MonoBehaviour
         if (Instance == null) Instance = this;
     }
 
-    /* Å×½ºÆ®
+    /* ï¿½×½ï¿½Æ®
     private void Update()
     {
-        // ½ºÆäÀÌ½º¹Ù¸¦ ´©¸£¸é ÆäÀÌµå¾Æ¿ô ¿¬Ãâ ½ÃÀÛ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½Æ¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             StartFade();
@@ -29,10 +29,10 @@ public class PlayFadeOut : MonoBehaviour
     {
         if (FadePanel == null)
         {
-            UnityEngine.Debug.Log("FadePanelÀÌ ÇÒ´çµÇÁö ¾Ê¾Ò½À´Ï´Ù. ÀÎ½ºÆåÅÍ¸¦ È®ÀÎÇØÁÖ¼¼¿ä.");
+            UnityEngine.Debug.Log("FadePanelï¿½ï¿½ ï¿½Ò´ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò½ï¿½ï¿½Ï´ï¿½. ï¿½Î½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ È®ï¿½ï¿½ï¿½ï¿½ï¿½Ö¼ï¿½ï¿½ï¿½.");
             return;
         }
-        UnityEngine.Debug.Log("ÆäÀÌµå¾Æ¿ô ¿¬ÃâÀ» ½ÃÀÛÇÕ´Ï´Ù.");
+        UnityEngine.Debug.Log("ï¿½ï¿½ï¿½Ìµï¿½Æ¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.");
         StartCoroutine(ProcessFadeCoroutine());
     }
 
@@ -49,6 +49,6 @@ public class PlayFadeOut : MonoBehaviour
             yield return null;
         }
         FadePanel.alpha = 1f;
-        UnityEngine.Debug.Log("ÆäÀÌµå¾Æ¿ô ¿¬ÃâÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù.");
+        UnityEngine.Debug.Log("ï¿½ï¿½ï¿½Ìµï¿½Æ¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
     }
 }

@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2989561327158712475
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5691441733966831424}
+  - component: {fileID: 9016376206743260124}
+  m_Layer: 0
+  m_Name: SafetyPracticeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5691441733966831424
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2989561327158712475}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.02514, y: 0.64909, z: -1.90103}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9016376206743260124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2989561327158712475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffc82c28adf4d384d8d8d5ba2df8334d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SafetyPracticeManager
+  isGloveEquipped: 0
+  toastController: {fileID: 0}
+  fadeCanvasGroup: {fileID: 0}
+  noGloveFailMessage: "\uBCF4\uD638\uAD6C \uBBF8\uCC29\uC6A9! \uC548\uC804\uC218\uCE59
+    \uC704\uBC18\uC73C\uB85C \uC2E4\uC2B5\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4."
+  toastShowTime: 2
+  delayBeforeFade: 1
+  fadeDuration: 1.5
+  delayBeforeReload: 0.5
+  failToastAudioSource: {fileID: 0}
+  failToastSoundClip: {fileID: 8300000, guid: ddfada8d3c1ecc642ba3af69dbf8c688, type: 3}
+  failFadeBgmAudioSource: {fileID: 0}
+  failFadeBgmClip: {fileID: 8300000, guid: 2e2d664725b62fc45af2f5a36713ca3f, type: 3}
+  stopFadeBgmBeforeReload: 1
+  showDebugLog: 1
