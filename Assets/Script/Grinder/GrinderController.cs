@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -49,10 +50,11 @@ public class GrinderController : MonoBehaviour
     // ═══════════════════════════════════════════════
 
     [Header("그라인더 사운드 설정")]
-    [SerializeField] private AudioClip grindSoundClip;
+    [SerializeField] private AudioClip startClip;
+    [SerializeField] private AudioClip loopClip;
+    [SerializeField] private AudioClip stopClip;
     [Range(0f, 1f)]
     [SerializeField] private float grindSoundVolume = 0.8f;
-    [SerializeField] private float soundFadeOutDuration = 0.5f; // 사운드 페이드 아웃 시간 (초)
 
     // ═══════════════════════════════════════════════
     // 디버그 설정
@@ -81,6 +83,10 @@ public class GrinderController : MonoBehaviour
     private float hapticLogTimer = 0f;
     private float carveCooldown = 0f;
 
+    // 사운드
+    private AudioSource loopSource1;
+    private Coroutine soundCoroutine = null;
+
     // 카빙 대상
     private List<VoxelObject> targets = new();
 
@@ -100,10 +106,14 @@ public class GrinderController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         audioSource.playOnAwake = false;
-        audioSource.loop = true;
+        audioSource.loop = false;
         audioSource.volume = grindSoundVolume;
-        if (grindSoundClip != null)
-            audioSource.clip = grindSoundClip;
+
+        loopSource1 = gameObject.AddComponent<AudioSource>();
+        loopSource1.playOnAwake = false;
+        loopSource1.loop = true;
+        loopSource1.volume = grindSoundVolume;
+        loopSource1.spatialBlend = audioSource.spatialBlend;
     }
 
     private void OnEnable()
@@ -223,11 +233,13 @@ public class GrinderController : MonoBehaviour
 
     private void OnReleased(SelectExitEventArgs args)
     {
+        bool wasActive = isActive;
         isGrabbed = false;
         isActive = false;
         currentDevice = default;
 
-        StopGrindSound();
+        if (wasActive)
+            StopGrindSound();
         Debug.Log("[GrinderController] 그라인더 놓음");
     }
 
@@ -263,44 +275,71 @@ public class GrinderController : MonoBehaviour
     private void PlayGrindSound()
     {
         if (audioSource == null) return;
-        if (audioSource.clip == null)
-        {
-            Debug.LogWarning("[GrinderController] 그라인더 사운드 클립이 연결되지 않았습니다.");
-            return;
-        }
-        audioSource.volume = grindSoundVolume;
-        if (!audioSource.isPlaying)
-        {
-            audioSource.Play();
-            Debug.Log("[GrinderController] 그라인더 사운드 재생");
-        }
+
+        if (soundCoroutine != null)
+            StopCoroutine(soundCoroutine);
+
+        soundCoroutine = StartCoroutine(GrindSoundRoutine());
     }
 
     private void StopGrindSound()
     {
         if (audioSource == null) return;
-        if (audioSource.isPlaying)
+
+        if (soundCoroutine != null)
         {
-            StopAllCoroutines();
-            StartCoroutine(FadeOutSound());
+            StopCoroutine(soundCoroutine);
+            soundCoroutine = null;
         }
+
+        soundCoroutine = StartCoroutine(StopSoundRoutine());
     }
 
-    private System.Collections.IEnumerator FadeOutSound()
+    private IEnumerator GrindSoundRoutine()
     {
-        float startVolume = audioSource.volume;
-        float elapsed = 0f;
+        audioSource.volume = grindSoundVolume;
+        loopSource1.volume = grindSoundVolume;
 
-        while (elapsed < soundFadeOutDuration)
+        double loopStartDsp;
+
+        if (startClip != null)
         {
-            elapsed += Time.deltaTime;
-            audioSource.volume = Mathf.Lerp(startVolume, 0f, elapsed / soundFadeOutDuration);
-            yield return null;
+            double startDsp = AudioSettings.dspTime + 0.05;
+            audioSource.loop = false;
+            audioSource.clip = startClip;
+            audioSource.PlayScheduled(startDsp);
+            loopStartDsp = startDsp + startClip.length;
+        }
+        else
+        {
+            loopStartDsp = AudioSettings.dspTime + 0.05;
+        }
+
+        if (loopClip != null)
+        {
+            loopSource1.clip = loopClip;
+            loopSource1.loop = true;
+            loopSource1.PlayScheduled(loopStartDsp);
+        }
+
+        yield break;
+    }
+
+    private IEnumerator StopSoundRoutine()
+    {
+        loopSource1.Stop();
+
+        if (stopClip != null)
+        {
+            audioSource.loop = false;
+            audioSource.clip = stopClip;
+            audioSource.volume = grindSoundVolume;
+            audioSource.Play();
+            yield return new WaitForSeconds(stopClip.length);
         }
 
         audioSource.Stop();
-        audioSource.volume = grindSoundVolume; // 볼륨 원상복구 (다음 재생 대비)
-        Debug.Log("[GrinderController] 그라인더 사운드 페이드 아웃 완료");
+        soundCoroutine = null;
     }
 
     // ═══════════════════════════════════════════════

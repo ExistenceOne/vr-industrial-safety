@@ -186,18 +186,20 @@ public class SafetyPracticeManager : MonoBehaviour
     }
 
     // 장갑 착용 여부와 무관하게 항상 실패 처리 (그라인더 날 접촉 등 즉사 사고)
-    public bool TryFailAlways()
+    public bool TryFailAlways(string overrideMessage = null)
     {
         if (isFailing)
             return true;
 
-        StartCoroutine(FailRoutine());
+        StartCoroutine(FailRoutine(overrideMessage));
         return true;
     }
 
-    private IEnumerator FailRoutine()
+    private IEnumerator FailRoutine(string overrideMessage = null)
     {
         isFailing = true;
+
+        string message = overrideMessage ?? noGloveFailMessage;
 
         if (showDebugLog)
         {
@@ -206,7 +208,7 @@ public class SafetyPracticeManager : MonoBehaviour
 
         if (toastController != null)
         {
-            toastController.ShowFailToast(noGloveFailMessage, toastShowTime);
+            toastController.ShowFailToast(message, toastShowTime);
         }
 
         PlayFailToastSound();
