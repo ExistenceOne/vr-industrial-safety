@@ -410,6 +410,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2437517278455597279, guid: 33fabc0c88784b248ba249d3b34320ed, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 110
+      objectReference: {fileID: 0}
+    - target: {fileID: 4275159300001001955, guid: 33fabc0c88784b248ba249d3b34320ed, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 120
+      objectReference: {fileID: 0}
     - target: {fileID: 7749755889649694798, guid: 33fabc0c88784b248ba249d3b34320ed, type: 3}
       propertyPath: m_Name
       value: HUDCanvas
@@ -591,6 +599,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 46e53344f3e64a5468346878ca04e892, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 412e0163dd5e16b4ca48ee398a7ea7ad, type: 2}
     - target: {fileID: 919132149155446097, guid: 46e53344f3e64a5468346878ca04e892, type: 3}
       propertyPath: m_Name
       value: Brush
@@ -598,7 +610,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 46e53344f3e64a5468346878ca04e892, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 714455181}
   m_SourcePrefab: {fileID: 100100000, guid: 46e53344f3e64a5468346878ca04e892, type: 3}
 --- !u!1 &550870328
 GameObject:
@@ -718,6 +733,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+--- !u!1 &714455178 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 46e53344f3e64a5468346878ca04e892, type: 3}
+  m_PrefabInstance: {fileID: 475471120}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &714455181
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714455178}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -7933065038289745687, guid: 46e53344f3e64a5468346878ca04e892, type: 3}
 --- !u!1001 &1103826656
 PrefabInstance:
   m_ObjectHideFlags: 0
