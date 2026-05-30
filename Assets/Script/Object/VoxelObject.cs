@@ -34,6 +34,9 @@ public class VoxelObject : MonoBehaviour
     private const float ColliderUpdateInterval = 0.2f;
     private bool meshDirty = false;
 
+    // 최초 복셀 수 (초기화 시 1회 계산)
+    private int initialVoxelCount = 0;
+
     private void Awake()
     {
         if (GetComponent<MeshFilter>() == null)   gameObject.AddComponent<MeshFilter>();
@@ -64,6 +67,8 @@ public class VoxelObject : MonoBehaviour
             voxels[x, y, z] = isBorder ? 0f : 1f;
         }
 
+        initialVoxelCount = CountActiveVoxels();
+
         RebuildMesh();
 
         if (blade != null)
@@ -85,6 +90,38 @@ public class VoxelObject : MonoBehaviour
         meshCollider.sharedMesh = null;
         meshCollider.sharedMesh = meshFilter.sharedMesh;
         meshDirty = false;
+    }
+
+    /// <summary>현재 활성 복셀 수를 반환합니다.</summary>
+    public int GetCurrentVoxelCount()
+    {
+        return CountActiveVoxels();
+    }
+
+    /// <summary>최초 복셀 수를 반환합니다.</summary>
+    public int GetInitialVoxelCount()
+    {
+        return initialVoxelCount;
+    }
+
+    /// <summary>현재 깎인 비율 (0~1)을 반환합니다. 1 = 100% 깎임</summary>
+    public float GetCarvedRatio()
+    {
+        if (initialVoxelCount == 0) return 0f;
+        int current = CountActiveVoxels();
+        return 1f - (float)current / initialVoxelCount;
+    }
+
+    private int CountActiveVoxels()
+    {
+        int count = 0;
+        for (int x = 0; x <= resX; x++)
+        for (int y = 0; y <= resY; y++)
+        for (int z = 0; z <= resZ; z++)
+        {
+            if (voxels[x, y, z] > 0f) count++;
+        }
+        return count;
     }
 
     public void Carve(Vector3 worldCenter, float worldRadius, float depth, Vector3 worldCarveAxis)
@@ -130,12 +167,8 @@ public class VoxelObject : MonoBehaviour
     {
         if (carveParticle == null) return;
 
-        // 파티클 위치를 깎인 지점으로 이동
         carveParticle.transform.position = worldCenter;
-
-        // carveAxis 반대 방향(표면 밖으로 튀어나오는 방향)으로 파티클 방향 설정
         carveParticle.transform.rotation = Quaternion.LookRotation(-worldCarveAxis);
-
         carveParticle.Emit(new ParticleSystem.EmitParams(), particleEmitCount);
     }
 
