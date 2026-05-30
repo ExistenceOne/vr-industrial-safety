@@ -29,12 +29,18 @@ public class HandGripAnimator : MonoBehaviour
         public Transform bone;
         public Vector3 openEuler;
         public Vector3 fistEuler;
+        [Tooltip("Index finger bones: driven by the trigger (activate) input while the object is held.")]
+        public bool isIndexFinger;
     }
 
     [SerializeField] FingerBone[] m_FingerBones = new FingerBone[0];
 
     [SerializeField]
     XRInputValueReader<float> m_GripInput = new XRInputValueReader<float>("Grip");
+
+    [Tooltip("Drives index finger curl while the object is held (trigger / activate button).")]
+    [SerializeField]
+    XRInputValueReader<float> m_TriggerInput = new XRInputValueReader<float>("Activate");
 
     [Tooltip("While this interactable is selected the hand is locked in the fist pose.")]
     [SerializeField] XRGrabInteractable m_GrabbedObject;
@@ -43,11 +49,13 @@ public class HandGripAnimator : MonoBehaviour
     [SerializeField] float m_TransitionSpeed = 12f;
 
     float m_CurrentValue;
+    float m_IndexValue;
     bool m_IsHolding;
 
     void OnEnable()
     {
         m_GripInput?.EnableDirectActionIfModeUsed();
+        m_TriggerInput?.EnableDirectActionIfModeUsed();
         if (m_GrabbedObject != null)
         {
             m_GrabbedObject.selectEntered.AddListener(OnSelectEntered);
@@ -58,6 +66,7 @@ public class HandGripAnimator : MonoBehaviour
     void OnDisable()
     {
         m_GripInput?.DisableDirectActionIfModeUsed();
+        m_TriggerInput?.DisableDirectActionIfModeUsed();
         if (m_GrabbedObject != null)
         {
             m_GrabbedObject.selectEntered.RemoveListener(OnSelectEntered);
@@ -70,17 +79,21 @@ public class HandGripAnimator : MonoBehaviour
 
     void Update()
     {
-        float target = m_IsHolding ? 1f : (m_GripInput?.ReadValue() ?? 0f);
-        m_CurrentValue = Mathf.MoveTowards(m_CurrentValue, target, Time.deltaTime * m_TransitionSpeed);
+        float gripTarget    = m_IsHolding ? 1f : (m_GripInput?.ReadValue() ?? 0f);
+        float indexTarget   = m_IsHolding ? (m_TriggerInput?.ReadValue() ?? 0f) : gripTarget;
+
+        m_CurrentValue = Mathf.MoveTowards(m_CurrentValue, gripTarget,  Time.deltaTime * m_TransitionSpeed);
+        m_IndexValue   = Mathf.MoveTowards(m_IndexValue,   indexTarget, Time.deltaTime * m_TransitionSpeed);
 
         for (int i = 0; i < m_FingerBones.Length; i++)
         {
             var fb = m_FingerBones[i];
             if (fb.bone == null) continue;
+            float t = (m_IsHolding && fb.isIndexFinger) ? m_IndexValue : m_CurrentValue;
             fb.bone.localRotation = Quaternion.Slerp(
                 Quaternion.Euler(fb.openEuler),
                 Quaternion.Euler(fb.fistEuler),
-                m_CurrentValue);
+                t);
         }
     }
 

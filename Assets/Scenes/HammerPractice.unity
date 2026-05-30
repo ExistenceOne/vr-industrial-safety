@@ -141,6 +141,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40bb752920f39ae4daaf53af82cdd069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ToastMessageController
+--- !u!114 &127919252 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 695622834024656388, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
+  m_PrefabInstance: {fileID: 1640051221924049122}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable
 --- !u!114 &898159118 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5076470982825112867, guid: 827fa871be5f47a408976a3fd17460bb, type: 3}
@@ -309,17 +320,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3659856169654412904, guid: 827fa871be5f47a408976a3fd17460bb, type: 3}
   m_PrefabInstance: {fileID: 749255055649471123}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1644074623 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 695622834024656388, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
-  m_PrefabInstance: {fileID: 1640051221924049122}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable
 --- !u!1 &1998656538
 GameObject:
   m_ObjectHideFlags: 0
@@ -835,23 +835,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5715312687995321022, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.70710677
+      value: 0.70441604
       objectReference: {fileID: 0}
     - target: {fileID: 5715312687995321022, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.122787856
+      value: -0.06162845
       objectReference: {fileID: 0}
     - target: {fileID: 5715312687995321022, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.6963642
+      value: 0.70441604
       objectReference: {fileID: 0}
     - target: {fileID: 5715312687995321022, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.06162845
       objectReference: {fileID: 0}
     - target: {fileID: 5715312687995321022, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5715312687995321022, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -1077,14 +1077,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 673693912893083534, guid: 189b1bcaf01595041ada78c2cca57ed2, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1226667157320906240, guid: 189b1bcaf01595041ada78c2cca57ed2, type: 3}
       propertyPath: m_Name
       value: XR Origin (XR Rig)
       objectReference: {fileID: 0}
+    - target: {fileID: 3556728492379124113, guid: 189b1bcaf01595041ada78c2cca57ed2, type: 3}
+      propertyPath: m_GrabbedObject
+      value: 
+      objectReference: {fileID: 127919252}
     - target: {fileID: 4749425488332423540, guid: 189b1bcaf01595041ada78c2cca57ed2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.80079
@@ -1129,10 +1129,6 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 6492750651324966940}
-    - target: {fileID: 6992903475008527627, guid: 189b1bcaf01595041ada78c2cca57ed2, type: 3}
-      propertyPath: m_GrabbedObject
-      value: 
-      objectReference: {fileID: 1644074623}
     - target: {fileID: 8384348900748627196, guid: 189b1bcaf01595041ada78c2cca57ed2, type: 3}
       propertyPath: m_InteractionManager
       value: 
