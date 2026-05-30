@@ -1257,13 +1257,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9016376206743260124, guid: 86e65480d18de5f48bab951314ce8b97, type: 3}
+      propertyPath: practiceType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9016376206743260124, guid: 86e65480d18de5f48bab951314ce8b97, type: 3}
       propertyPath: fadeCanvasGroup
       value: 
       objectReference: {fileID: 6360247338377000894}
     - target: {fileID: 9016376206743260124, guid: 86e65480d18de5f48bab951314ce8b97, type: 3}
       propertyPath: toastController
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 120036247}
     - target: {fileID: 9016376206743260124, guid: 86e65480d18de5f48bab951314ce8b97, type: 3}
       propertyPath: nailHitController
       value: 
