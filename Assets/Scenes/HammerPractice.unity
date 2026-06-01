@@ -208,7 +208,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 695622834024656388, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
   m_PrefabInstance: {fileID: 1640051221924049122}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1640051221924049125}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
@@ -478,7 +478,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7005683835660147318, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
   m_PrefabInstance: {fileID: 1640051221924049122}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1640051221924049123}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ac09d05d78d171419084c3159afb302, type: 3}
@@ -1465,8 +1465,79 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2773586173279037702, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1128928055}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7797402851212180739, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1640051221924049127}
+    - targetCorrespondingSourceObject: {fileID: 5117473023878036138, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1640051221924049124}
   m_SourcePrefab: {fileID: 100100000, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
+--- !u!1 &1640051221924049123 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5117473023878036138, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
+  m_PrefabInstance: {fileID: 1640051221924049122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1640051221924049124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640051221924049123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38c076fbe2a60d04691a57b1c5775371, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HammerFragmentEyeAccident
+  playerHead: {fileID: 35624882}
+  bloodEffectPrefab: {fileID: 3723186245368743947, guid: a46e58915c3fa5b4f9fd597d3355860a, type: 3}
+  toastController: {fileID: 120036247}
+  fragmentRicochetSound: {fileID: 8300000, guid: 1bd5c7a7816a3be478f42523baeb79cd, type: 3}
+  bloodSquirtSound: {fileID: 8300000, guid: 3460f54429dadcc48ae74fed7f93f104, type: 3}
+  screamSound: {fileID: 8300000, guid: 204e85e0530e90647bca6fcd853eb6d6, type: 3}
+  fadeOutSound: {fileID: 8300000, guid: 2e2d664725b62fc45af2f5a36713ca3f, type: 3}
+  minTiltAngleToTrigger: 20
+--- !u!1 &1640051221924049125 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7797402851212180739, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
+  m_PrefabInstance: {fileID: 1640051221924049122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1640051221924049126 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 413063790390747497, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
+  m_PrefabInstance: {fileID: 1640051221924049122}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640051221924049125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2830321d03d0699458b916c245cbd198, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HammerMotionHapticController
+--- !u!114 &1640051221924049127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640051221924049125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d117428949e1ef48b32d48bf04edc65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HammerHandAccidentDetector
+  hammerController: {fileID: 1640051221924049126}
+  leftHandTransform: {fileID: 5555374028634434211}
+  playerHead: {fileID: 35624882}
+  bloodEffectPrefab: {fileID: 3723186245368743947, guid: a46e58915c3fa5b4f9fd597d3355860a, type: 3}
+  toastController: {fileID: 120036247}
+  hammerImpactSound: {fileID: 0}
+  bloodSquirtSound: {fileID: 8300000, guid: 3460f54429dadcc48ae74fed7f93f104, type: 3}
+  screamSound: {fileID: 8300000, guid: 204e85e0530e90647bca6fcd853eb6d6, type: 3}
+  fadeOutSound: {fileID: 8300000, guid: 2e2d664725b62fc45af2f5a36713ca3f, type: 3}
+  hitRadius: 0.08
+  minHitSpeed: 1.5
+  showDebugLog: 1
 --- !u!1001 &3380628776732799990
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1710,6 +1781,11 @@ PrefabInstance:
       addedObject: {fileID: 367454043}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 189b1bcaf01595041ada78c2cca57ed2, type: 3}
+--- !u!4 &5555374028634434211 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1053121783201221692, guid: 189b1bcaf01595041ada78c2cca57ed2, type: 3}
+  m_PrefabInstance: {fileID: 5555374028634434210}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5699595619353851383
 PrefabInstance:
   m_ObjectHideFlags: 0

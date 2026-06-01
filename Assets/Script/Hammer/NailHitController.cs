@@ -40,12 +40,15 @@ public class NailHitController : MonoBehaviour
     private float currentTiltX = 0f;
     private float currentTiltZ = 0f;
 
+    private HammerFragmentEyeAccident fragmentAccident;
+
     private bool hasShownStartMessage = false;
     private bool hasShownFixedMessage = false;
 
     private void Start()
     {
         initialRotation = transform.rotation;
+        fragmentAccident = GetComponent<HammerFragmentEyeAccident>();
     }
 
     public void OnHitByHammer(Transform hammerHead)
@@ -166,6 +169,8 @@ public class NailHitController : MonoBehaviour
                 }
             }
         }
+
+        fragmentAccident?.TryTriggerAccident(GetTotalTiltAngle());
 
         if (showDebugLog)
         {

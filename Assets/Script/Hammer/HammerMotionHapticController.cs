@@ -37,6 +37,10 @@ public class HammerMotionHapticController : MonoBehaviour
 
     private bool isGrabbed = false;
 
+    public bool IsGrabbed => isGrabbed;
+    public float CurrentHeadSpeed => currentHeadSpeed;
+    public Transform HammerHead => hammerHead;
+
     private Vector3 previousHeadPosition;
     private float currentHeadSpeed = 0f;
     private float lastHitTime = -999f;
