@@ -482,7 +482,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HammerFragmentEyeAccident
   playerHead: {fileID: 35624882}
   bloodEffectPrefab: {fileID: 3723186245368743947, guid: a46e58915c3fa5b4f9fd597d3355860a, type: 3}
-  failMessage: "\uD30C\uD3B8 \uBE44\uC0B0!\n\uD30C\uD3B8\uC774 \uB208\uC744 \uAC00\uACA9\uD588\uC2B5\uB2C8\uB2E4."
+  failMessage: "\uD30C\uD3B8 \uBE44\uC0B0 \uC0AC\uACE0 \uBC1C\uC0DD\r\n\r\n\uBABB\uC774
+    \uAE30\uC6B8\uC5B4\uC9C4 \uC0C1\uD0DC\uC5D0\uC11C \uB9DD\uCE58\uB85C \uD0C0\uACA9\uD558\uC5EC\r\n\uAE08\uC18D
+    \uD30C\uD3B8\uC774 \uB208 \uBC29\uD5A5\uC73C\uB85C \uD280\uC5C8\uC2B5\uB2C8\uB2E4.\r\n\r\n\uC791\uC5C5
+    \uC911 \uB208 \uBD80\uC0C1\uC758 \uC57D 70%\uB294 \uB0A0\uC544\uC624\uAC70\uB098
+    \uB5A8\uC5B4\uC9C0\uB294 \uBB3C\uCCB4,\r\n\uB610\uB294 \uBD88\uAF43\uC774 \uB208\uC5D0
+    \uCDA9\uB3CC\uD558\uBA74\uC11C \uBC1C\uC0DD\uD55C \uAC83\uC73C\uB85C \uBCF4\uACE0\uB429\uB2C8\uB2E4.\r\n\r\n\uC2E4\uC81C
+    \uC0AC\uB840\uB85C, \uBCF4\uD638\uC548\uACBD \uC5C6\uC774 \uB9DD\uCE58\uC9C8\uC744
+    \uD558\uB358 \uC791\uC5C5\uC790\uAC00\r\n\uAE08\uC18D \uD30C\uD3B8\uC5D0 \uB208\uC744
+    \uB9DE\uC544 \uC2DC\uC57C \uD750\uB9BC\uACFC \uD1B5\uC99D\uC744 \uD638\uC18C\uD55C
+    \uC0AC\uB840\uAC00 \uBCF4\uACE0\uB418\uC5C8\uC2B5\uB2C8\uB2E4.\r\n\r\n\uC791\uC740
+    \uD30C\uD3B8\uC774\uB77C\uB3C4 \uAC01\uB9C9 \uC190\uC0C1, \uC548\uAD6C \uAD00\uD1B5\uC0C1,\r\n\uC2DC\uB825
+    \uC800\uD558\uB85C \uC774\uC5B4\uC9C8 \uC218 \uC788\uC2B5\uB2C8\uB2E4.\r\n\r\n\uB9DD\uCE58
+    \uC791\uC5C5 \uC804\uC5D0\uB294 \uBC18\uB4DC\uC2DC \uBCF4\uC548\uACBD\uC744 \uCC29\uC6A9\uD558\uACE0,\r\n\uBABB\uC744
+    \uC218\uC9C1\uC73C\uB85C \uACE0\uC815\uD55C \uC0C1\uD0DC\uC5D0\uC11C \uD0C0\uACA9\uD574\uC57C
+    \uD569\uB2C8\uB2E4."
   fragmentRicochetSound: {fileID: 8300000, guid: 1bd5c7a7816a3be478f42523baeb79cd, type: 3}
   bloodSquirtSound: {fileID: 8300000, guid: 3460f54429dadcc48ae74fed7f93f104, type: 3}
   screamSound: {fileID: 8300000, guid: 204e85e0530e90647bca6fcd853eb6d6, type: 3}
@@ -2329,12 +2343,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HammerHandAccidentDetector
   hammerController: {fileID: 1494926108}
-  leftHandTransform: {fileID: 0}
+  leftHandTransform: {fileID: 5555374028634434211}
   playerHead: {fileID: 0}
   bloodEffectPrefab: {fileID: 3723186245368743947, guid: a46e58915c3fa5b4f9fd597d3355860a, type: 3}
   safetyCheckObject: {fileID: 0}
   safetyPassMessage: "\uC548\uC804\uD558\uAC8C \uC791\uC5C5\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4!"
-  failMessage: "\uC67C\uC190 \uD0C0\uACA9!\n\uB9DD\uCE58\uAC00 \uC190\uC744 \uAC00\uACA9\uD588\uC2B5\uB2C8\uB2E4."
+  failMessage: "\uC190 \uD0C0\uACA9 \uC0AC\uACE0 \uBC1C\uC0DD\r\n\r\n\uBABB\uC744
+    \uACE0\uC815\uD55C \uC190\uC758 \uC704\uCE58\uB97C \uD655\uC778\uD558\uC9C0 \uC54A\uC740
+    \uC0C1\uD0DC\uC5D0\uC11C\r\n\uB9DD\uCE58\uAC00 \uC190\uC744 \uAC00\uACA9\uD588\uC2B5\uB2C8\uB2E4.\r\n\r\n\uBBF8\uAD6D
+    \uB178\uB3D9\uBD80 \uC790\uB8CC\uC5D0 \uB530\uB974\uBA74 \uC5C5\uBB34\uC0C1 \uBD80\uC0C1
+    \uC911 \uC57D 23%\uAC00\r\n\uC190 \uB610\uB294 \uC190\uAC00\uB77D \uBD80\uC0C1\uC73C\uB85C
+    \uBCF4\uACE0\uB420 \uB9CC\uD07C \uC190 \uBD80\uC0C1\uC740 \uD754\uD558\uAC8C
+    \uBC1C\uC0DD\uD569\uB2C8\uB2E4.\r\n\r\n\uB610\uD55C \uC190\uACF5\uAD6C \uAD00\uB828
+    \uC7AC\uD574 \uBD84\uC11D\uC5D0\uC11C\uB294 \uC218\uACF5\uAD6C \uC0AC\uACE0\uAC00\r\n10\uB9CC
+    \uAC74 \uC774\uC0C1 \uBCF4\uACE0\uB418\uC5C8\uC73C\uBA70, \uB9DD\uCE58\uC640
+    \uAC19\uC740 \uC218\uACF5\uAD6C \uC0AC\uC6A9 \uC911\r\n\uC190\uAC00\uB77D \uACE8\uC808,
+    \uD0C0\uBC15\uC0C1, \uC5F4\uC0C1 \uC0AC\uACE0\uAC00 \uBC1C\uC0DD\uD560 \uC218
+    \uC788\uC2B5\uB2C8\uB2E4.\r\n\r\n\uC791\uC740 \uD0C0\uACA9\uC774\uB77C\uB3C4
+    \uC190\uAC00\uB77D \uACE8\uC808, \uC190\uD1B1 \uC190\uC0C1,\r\n\uC2E0\uACBD \uC190\uC0C1\uC73C\uB85C
+    \uC774\uC5B4\uC9C8 \uC218 \uC788\uC2B5\uB2C8\uB2E4.\r\n\r\n\uB9DD\uCE58 \uC791\uC5C5
+    \uC2DC\uC5D0\uB294 \uC190\uC744 \uD0C0\uACA9 \uC9C0\uC810\uC5D0\uC11C \uCDA9\uBD84\uD788
+    \uBA40\uB9AC \uB450\uACE0,\r\n\uBABB\uC744 \uC548\uC815\uC801\uC73C\uB85C \uACE0\uC815\uD55C
+    \uB4A4 \uC815\uD655\uD55C \uBC29\uD5A5\uC73C\uB85C \uD0C0\uACA9\uD574\uC57C \uD569\uB2C8\uB2E4."
   hammerImpactSound: {fileID: 0}
   bloodSquirtSound: {fileID: 8300000, guid: 3460f54429dadcc48ae74fed7f93f104, type: 3}
   screamSound: {fileID: 8300000, guid: 204e85e0530e90647bca6fcd853eb6d6, type: 3}
@@ -4769,7 +4799,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8939527866673422113, guid: e30dee6f02d8e0d40a9b2a80b0f7773d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 139
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
