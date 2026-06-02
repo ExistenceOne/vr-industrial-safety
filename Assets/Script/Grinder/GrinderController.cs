@@ -32,8 +32,9 @@ public class GrinderController : MonoBehaviour
     // ═══════════════════════════════════════════════
 
     [Header("블레이드 회전 설정")]
-    [SerializeField] private Transform bladeTransform;         // 회전시킬 블레이드 오브젝트
-    [SerializeField] private float bladeRotationSpeed = 1800f; // 회전 속도 (도/초)
+    [SerializeField] private Transform bladeTransform;
+    [SerializeField] private float bladeRotationSpeed = 1800f;
+    [SerializeField] private Vector3 bladeRotationAxis = Vector3.forward;
 
     // ═══════════════════════════════════════════════
     // 햅틱 설정
@@ -164,7 +165,7 @@ public class GrinderController : MonoBehaviour
 
         // 블레이드 Z축 회전
         if (bladeTransform != null)
-            bladeTransform.Rotate(Vector3.forward, bladeRotationSpeed * Time.deltaTime, Space.Self);
+            bladeTransform.Rotate(bladeRotationAxis.normalized, bladeRotationSpeed * Time.deltaTime, Space.Self);
 
         // 햅틱 장치 갱신
         if (!currentDevice.isValid)

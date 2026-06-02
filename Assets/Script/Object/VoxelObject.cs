@@ -2,15 +2,17 @@ using UnityEngine;
 
 public class VoxelObject : MonoBehaviour
 {
-    [Header("복셀 해상도")]
-    public int resX = 20;
-    public int resY = 40;
-    public int resZ = 10;
+    [Header("복셀 한 칸 크기 (월드 단위)")]
+    public float voxelSize = 0.025f;
 
-    [Header("크기 (월드 단위)")]
-    public float sizeX = 0.1f;
-    public float sizeY = 1f;
-    public float sizeZ = 1f;
+    [Header("복셀 개수 (실제 크기 = voxelSize * res)")]
+    public int resX = 4;
+    public int resY = 40;
+    public int resZ = 40;
+
+    [HideInInspector] public float sizeX;
+    [HideInInspector] public float sizeY;
+    [HideInInspector] public float sizeZ;
 
     [Header("재질 강도 (0.1 = 물렁물렁, 1 = 보통, 클수록 단단함)")]
     [Range(0.1f, 5f)]
@@ -54,9 +56,13 @@ public class VoxelObject : MonoBehaviour
         meshCollider = GetComponent<MeshCollider>();
         meshCollider.convex = false;
 
-        voxelSizeX = sizeX / resX;
-        voxelSizeY = sizeY / resY;
-        voxelSizeZ = sizeZ / resZ;
+        sizeX = voxelSize * resX;
+        sizeY = voxelSize * resY;
+        sizeZ = voxelSize * resZ;
+
+        voxelSizeX = voxelSize;
+        voxelSizeY = voxelSize;
+        voxelSizeZ = voxelSize;
 
         voxels = new float[resX + 1, resY + 1, resZ + 1];
         for (int x = 0; x <= resX; x++)
@@ -110,6 +116,80 @@ public class VoxelObject : MonoBehaviour
         if (initialVoxelCount == 0) return 0f;
         int current = CountActiveVoxels();
         return 1f - (float)current / initialVoxelCount;
+    }
+
+    /// <summary>지정 방향으로 입구면부터 연속으로 깎인 깊이 비율 (0~1)을 반환합니다.</summary>
+    /// <param name="minCarvedPerLayer">레이어당 깎인 것으로 인정할 최소 복셀 수</param>
+    public float GetCarvedDepthRatio(Vector3 worldDirection, int minCarvedPerLayer = 1)
+    {
+        Vector3 localDir = transform.InverseTransformDirection(worldDirection).normalized;
+
+        float ax = Mathf.Abs(localDir.x);
+        float ay = Mathf.Abs(localDir.y);
+        float az = Mathf.Abs(localDir.z);
+
+        int carved = 0;
+        int total;
+
+        if (az >= ax && az >= ay)
+        {
+            total = resZ - 1;
+            bool forward = localDir.z > 0;
+            for (int i = 1; i < resZ; i++)
+            {
+                int z = forward ? i : resZ - i;
+                if (IsLayerCarved(z, axis: 2, minCarvedPerLayer)) carved = i;
+                else break;
+            }
+        }
+        else if (ay >= ax)
+        {
+            total = resY - 1;
+            bool forward = localDir.y > 0;
+            for (int i = 1; i < resY; i++)
+            {
+                int y = forward ? i : resY - i;
+                if (IsLayerCarved(y, axis: 1, minCarvedPerLayer)) carved = i;
+                else break;
+            }
+        }
+        else
+        {
+            total = resX - 1;
+            bool forward = localDir.x > 0;
+            for (int i = 1; i < resX; i++)
+            {
+                int x = forward ? i : resX - i;
+                if (IsLayerCarved(x, axis: 0, minCarvedPerLayer)) carved = i;
+                else break;
+            }
+        }
+
+        return total > 0 ? (float)carved / total : 0f;
+    }
+
+    private bool IsLayerCarved(int sliceIndex, int axis, int minCount)
+    {
+        int count = 0;
+        if (axis == 2)
+        {
+            for (int x = 1; x < resX; x++)
+            for (int y = 1; y < resY; y++)
+                if (voxels[x, y, sliceIndex] < 0.5f && ++count >= minCount) return true;
+        }
+        else if (axis == 1)
+        {
+            for (int x = 1; x < resX; x++)
+            for (int z = 1; z < resZ; z++)
+                if (voxels[x, sliceIndex, z] < 0.5f && ++count >= minCount) return true;
+        }
+        else
+        {
+            for (int y = 1; y < resY; y++)
+            for (int z = 1; z < resZ; z++)
+                if (voxels[sliceIndex, y, z] < 0.5f && ++count >= minCount) return true;
+        }
+        return false;
     }
 
     private int CountActiveVoxels()
@@ -185,6 +265,18 @@ public class VoxelObject : MonoBehaviour
     {
         Mesh mesh = MarchingCubes.Generate(voxels, resX, resY, resZ, voxelSizeX, voxelSizeY, voxelSizeZ, sizeX, sizeY, sizeZ);
         meshFilter.sharedMesh = mesh;
-        meshCollider.sharedMesh = mesh;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        float sx = voxelSize * resX;
+        float sy = voxelSize * resY;
+        float sz = voxelSize * resZ;
+
+        Gizmos.matrix = transform.localToWorldMatrix;
+        Gizmos.color = new Color(0.2f, 0.8f, 1f, 0.3f);
+        Gizmos.DrawCube(Vector3.zero, new Vector3(sx, sy, sz));
+        Gizmos.color = new Color(0.2f, 0.8f, 1f, 1f);
+        Gizmos.DrawWireCube(Vector3.zero, new Vector3(sx, sy, sz));
     }
 }
