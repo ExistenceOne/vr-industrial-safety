@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
@@ -12,7 +12,7 @@ public class DrillEntanglementAccident : MonoBehaviour
     [SerializeField] private Transform drillTip;
     [Tooltip("피 분출 이펙트 프리팹(blood_spurt_effect) 연결")]
     [SerializeField] private GameObject bloodEffectPrefab;
-    [Tooltip("토스트 매니저 연결")]
+    [Tooltip("토스트 매니저 연결 (1단계 경고 메시지용)")]
     [SerializeField] private ToastMessageController toastController;
 
     [Header("사고 설정값")]
@@ -20,6 +20,18 @@ public class DrillEntanglementAccident : MonoBehaviour
     [SerializeField] private float dangerousDistance = 0.3f;
     [Tooltip("사고가 최종 발동하기 위해 위험 구역에서 버텨야 하는 시간(초)")]
     [SerializeField] private float requiredDuration = 1.5f;
+
+    [Header("안전 확인 오브젝트")]
+    [Tooltip("이 오브젝트가 비활성화 상태면 안전한 것으로 판단해 긍정 메시지를 표시하고 사고를 발동하지 않습니다.")]
+    [SerializeField] private GameObject safetyCheckObject;
+    [Tooltip("안전 확인 시 표시할 긍정 메시지")]
+    [SerializeField] private string safetyPassMessage = "안전하게 작업하고 있습니다!";
+
+    [Header("메시지 설정")]
+    [Tooltip("1단계 경고 시 표시할 메시지")]
+    [SerializeField] private string firstStrikeMessage = "말림 사고 발생!\n드릴을 몸에서 떨어뜨려 사용하세요.";
+    [Tooltip("치명상(페이드아웃) 시 표시할 실패 메시지")]
+    [SerializeField] private string fatalMessage = "말림 사고!\n드릴에 몸이 감겼습니다.";
 
     [Header("사운드 설정")]
     [Tooltip("피 연출 시 재생될 효과음 (BloodSquirt)")]
@@ -30,13 +42,14 @@ public class DrillEntanglementAccident : MonoBehaviour
     [SerializeField] private AudioClip screamSound;
     [Tooltip("화면이 어두워질 때 함께 감쇄하는 페이드아웃 효과음 (FadeOut)")]
     [SerializeField] private AudioClip fadeOutSound;
+    [Tooltip("모든 사고 효과음 볼륨 (0~1)")]
+    [SerializeField] [Range(0f, 1f)] private float soundVolume = 0.5f;
 
     private XRGrabInteractable grabInteractable;
 
-    // 상태 관리 변수
-    private bool hasFirstStrike = false;        // 1단계: 최초 피격 여부
-    private bool isAccidentComplete = false;    // 2단계: 기절(페이드아웃) 완료 여부
-    private float dangerTimer = 0f;             // 유지 시간 타이머
+    private bool hasFirstStrike = false;
+    private bool isAccidentComplete = false;
+    private float dangerTimer = 0f;
 
     private void Awake()
     {
@@ -53,14 +66,12 @@ public class DrillEntanglementAccident : MonoBehaviour
         grabInteractable.activated.RemoveListener(OnDrillActivated);
     }
 
-    // 드릴을 작동하는 순간 거리를 체크하여 피 연출
     private void OnDrillActivated(ActivateEventArgs args)
     {
         if (playerHead == null || drillTip == null || isAccidentComplete) return;
 
         float distanceToBody = Vector3.Distance(drillTip.position, playerHead.position);
 
-        // 위험 거리 안에서 작동시켰고, 아직 첫 피격이 일어나지 않았다면 즉시 실행
         if (distanceToBody < dangerousDistance && !hasFirstStrike)
         {
             TriggerFirstStrike();
@@ -71,10 +82,8 @@ public class DrillEntanglementAccident : MonoBehaviour
     {
         if (playerHead == null || drillTip == null || isAccidentComplete) return;
 
-        // 머리와 드릴 팁 사이의 거리 계산
         float distanceToBody = Vector3.Distance(drillTip.position, playerHead.position);
 
-        // 한 번 피 연출이 발생한 상태에서 거리를 실시간으로 체크
         if (hasFirstStrike)
         {
             if (distanceToBody < dangerousDistance)
@@ -83,65 +92,55 @@ public class DrillEntanglementAccident : MonoBehaviour
 
                 if (dangerTimer >= requiredDuration)
                 {
-                    TriggerFatalAccident(); // 1.5초 도달 시 페이드아웃
+                    TriggerFatalAccident();
                 }
             }
             else if (distanceToBody > dangerousDistance + 0.1f)
             {
-                // 치명상에 도달하기 전에 드릴을 멀리 치우면 상태가 초기화 (재테스트 가능)
                 ResetAccident();
             }
         }
     }
 
-    // [연출] 최초 피격
     private void TriggerFirstStrike()
     {
+        if (safetyCheckObject != null && !safetyCheckObject.activeSelf)
+        {
+            Debug.Log("[DrillEntanglement] 안전 오브젝트 비활성화 — 사고 없음");
+            if (toastController != null)
+                toastController.ShowSuccessToast(safetyPassMessage, 3f);
+            return;
+        }
+
         hasFirstStrike = true;
         Debug.Log("[DrillEntanglement] 1단계: 몸 근처에서 드릴 작동, 피 분출");
 
         if (toastController != null)
-        {
-            toastController.ShowFailToast("말림 사고 발생!\n드릴을 몸에서 떨어뜨려 사용하세요.", 4f);
-        }
+            toastController.ShowFailToast(firstStrikeMessage, 4f);
 
         if (bloodEffectPrefab != null)
-        {
             Instantiate(bloodEffectPrefab, drillTip.position, Quaternion.identity);
-        }
 
         if (clothRipSound != null)
-        {
-            AudioSource.PlayClipAtPoint(clothRipSound, playerHead.position);
-        }
+            AudioSource.PlayClipAtPoint(clothRipSound, playerHead.position, soundVolume);
         if (bloodSquirtSound != null)
-        {
-            AudioSource.PlayClipAtPoint(bloodSquirtSound, playerHead.position);
-        }
+            AudioSource.PlayClipAtPoint(bloodSquirtSound, playerHead.position, soundVolume);
     }
 
-    // [연출] 치명상 (페이드아웃)
     private void TriggerFatalAccident()
     {
         isAccidentComplete = true;
-        Debug.Log("[DrillEntanglement] 2단계: 위험 구역 1.5초 유지됨, 페이드아웃 실행");
-
-        if (PlayFadeOut.Instance != null)
-        {
-            PlayFadeOut.Instance.StartFade();
-        }
+        Debug.Log("[DrillEntanglement] 2단계: 위험 구역 유지됨, 페이드아웃 실행");
 
         if (screamSound != null)
-        {
-            AudioSource.PlayClipAtPoint(screamSound, playerHead.position);
-        }
+            AudioSource.PlayClipAtPoint(screamSound, playerHead.position, soundVolume);
         if (fadeOutSound != null)
-        {
-            AudioSource.PlayClipAtPoint(fadeOutSound, playerHead.position);
-        }
+            AudioSource.PlayClipAtPoint(fadeOutSound, playerHead.position, soundVolume);
+
+        if (SafetyPracticeManager.Instance != null)
+            SafetyPracticeManager.Instance.TryFailAlways(fatalMessage);
     }
 
-    // [초기화] 드릴을 멀리 떨어뜨렸을 때
     private void ResetAccident()
     {
         hasFirstStrike = false;

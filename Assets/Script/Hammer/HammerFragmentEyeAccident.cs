@@ -7,8 +7,10 @@ public class HammerFragmentEyeAccident : MonoBehaviour
     [SerializeField] private Transform playerHead;
     [Tooltip("피 분출 이펙트 프리팹 (blood_spurt_effect) 연결")]
     [SerializeField] private GameObject bloodEffectPrefab;
-    [Tooltip("토스트 매니저 연결")]
-    [SerializeField] private ToastMessageController toastController;
+
+    [Header("메시지 설정")]
+    [Tooltip("사고 발생 시 표시할 실패 메시지")]
+    [SerializeField] private string failMessage = "파편 비산!\n파편이 눈을 가격했습니다.";
 
     [Header("사운드 설정")]
     [Tooltip("파편이 튀는 금속 충돌 효과음")]
@@ -19,6 +21,8 @@ public class HammerFragmentEyeAccident : MonoBehaviour
     [SerializeField] private AudioClip screamSound;
     [Tooltip("화면이 어두워질 때 함께 재생되는 페이드아웃 효과음 (FadeOut)")]
     [SerializeField] private AudioClip fadeOutSound;
+    [Tooltip("모든 사고 효과음 볼륨 (0~1)")]
+    [SerializeField] [Range(0f, 1f)] private float soundVolume = 0.5f;
 
     [Header("사고 설정값")]
     [Tooltip("못의 기울기가 이 각도(도)를 초과한 상태에서 타격 시 파편 사고 발생")]
@@ -39,36 +43,19 @@ public class HammerFragmentEyeAccident : MonoBehaviour
         isAccidentTriggered = true;
         Debug.Log("[HammerFragmentEyeAccident] 파편 비산! 파편이 눈으로 튀었습니다.");
 
-        if (toastController != null)
-        {
-            toastController.ShowFailToast("파편 비산!\n파편이 눈을 가격했습니다.", 4f);
-        }
-
         if (bloodEffectPrefab != null && playerHead != null)
-        {
             Instantiate(bloodEffectPrefab, playerHead.position, playerHead.rotation);
-        }
 
         if (fragmentRicochetSound != null)
-        {
-            AudioSource.PlayClipAtPoint(fragmentRicochetSound, transform.position);
-        }
+            AudioSource.PlayClipAtPoint(fragmentRicochetSound, transform.position, soundVolume);
         if (bloodSquirtSound != null && playerHead != null)
-        {
-            AudioSource.PlayClipAtPoint(bloodSquirtSound, playerHead.position);
-        }
+            AudioSource.PlayClipAtPoint(bloodSquirtSound, playerHead.position, soundVolume);
         if (screamSound != null && playerHead != null)
-        {
-            AudioSource.PlayClipAtPoint(screamSound, playerHead.position);
-        }
+            AudioSource.PlayClipAtPoint(screamSound, playerHead.position, soundVolume);
         if (fadeOutSound != null && playerHead != null)
-        {
-            AudioSource.PlayClipAtPoint(fadeOutSound, playerHead.position);
-        }
+            AudioSource.PlayClipAtPoint(fadeOutSound, playerHead.position, soundVolume);
 
-        if (PlayFadeOut.Instance != null)
-        {
-            PlayFadeOut.Instance.StartFade();
-        }
+        if (SafetyPracticeManager.Instance != null)
+            SafetyPracticeManager.Instance.TryFailAlways(failMessage);
     }
 }

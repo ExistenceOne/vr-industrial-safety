@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-// AngleGrinder 오브젝트(GrinderController와 같은 GameObject)에 붙인다.
-// 블레이드 원통 영역이 VoxelObject와 2초 이상 접촉하면 킥백 사고 발생.
 public class GrinderKickbackDetector : MonoBehaviour
 {
     [Header("References")]
@@ -19,16 +17,19 @@ public class GrinderKickbackDetector : MonoBehaviour
 
     [Header("Kickback Settings")]
     [SerializeField] private float failTime = 2f;
-    [SerializeField] private string kickbackMessage = "킥백 사고";
+
+    [Header("메시지 설정")]
+    [Tooltip("킥백 사고 발생 시 표시할 실패 메시지")]
+    [SerializeField] private string failMessage = "킥백 사고!\n그라인더가 튕겨나왔습니다.";
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI countdownText;
 
-    [Header("Debug")]
-    [SerializeField] private bool showDebugLog = true;
-
     [Header("Contact Grace Period")]
     [SerializeField] private float contactGracePeriod = 0.3f;
+
+    [Header("Debug")]
+    [SerializeField] private bool showDebugLog = true;
 
     private float contactTimer = 0f;
     private float noContactTimer = 0f;
@@ -131,12 +132,11 @@ public class GrinderKickbackDetector : MonoBehaviour
             countdownText.text = "";
 
         if (SafetyPracticeManager.Instance != null)
-            SafetyPracticeManager.Instance.TryFailAlways(kickbackMessage);
+            SafetyPracticeManager.Instance.TryFailAlways(failMessage);
         else
             Debug.LogWarning("[GrinderKickbackDetector] SafetyPracticeManager 인스턴스 없음.");
     }
 
-    // ─── Gizmos ───────────────────────────────────────────────
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1f, 0.3f, 0f, 0.8f);

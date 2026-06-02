@@ -185,6 +185,12 @@ public class SafetyPracticeManager : MonoBehaviour
         return true;
     }
 
+    public void ShowPassMessage(string message, float showTime = 3f)
+    {
+        if (toastController != null)
+            toastController.ShowSuccessToast(message, showTime);
+    }
+
     // 장갑 착용 여부와 무관하게 항상 실패 처리 (그라인더 날 접촉 등 즉사 사고)
     public bool TryFailAlways(string overrideMessage = null)
     {

@@ -1,8 +1,5 @@
 using UnityEngine;
 
-// Hammer 오브젝트(HammerMotionHapticController와 같은 GameObject)에 붙인다.
-// 매 프레임 망치머리 위치가 왼손 근처인지 거리로 체크한다.
-
 public class HammerHandAccidentDetector : MonoBehaviour
 {
     [Header("References")]
@@ -15,8 +12,16 @@ public class HammerHandAccidentDetector : MonoBehaviour
 
     [Header("Blood Effect")]
     [SerializeField] private GameObject bloodEffectPrefab;
-    [Tooltip("토스트 매니저 연결")]
-    [SerializeField] private ToastMessageController toastController;
+
+    [Header("안전 확인 오브젝트")]
+    [Tooltip("이 오브젝트가 비활성화 상태면 안전한 것으로 판단해 긍정 메시지를 표시합니다.")]
+    [SerializeField] private GameObject safetyCheckObject;
+    [Tooltip("안전 확인 시 표시할 긍정 메시지")]
+    [SerializeField] private string safetyPassMessage = "안전하게 작업하고 있습니다!";
+
+    [Header("메시지 설정")]
+    [Tooltip("사고 발생 시 표시할 실패 메시지")]
+    [SerializeField] private string failMessage = "왼손 타격!\n망치가 손을 가격했습니다.";
 
     [Header("사운드 설정")]
     [Tooltip("망치가 손을 가격하는 충격음")]
@@ -27,6 +32,8 @@ public class HammerHandAccidentDetector : MonoBehaviour
     [SerializeField] private AudioClip screamSound;
     [Tooltip("페이드아웃 효과음 (FadeOut)")]
     [SerializeField] private AudioClip fadeOutSound;
+    [Tooltip("모든 사고 효과음 볼륨 (0~1)")]
+    [SerializeField] [Range(0f, 1f)] private float soundVolume = 0.5f;
 
     [Header("사고 설정값")]
     [Tooltip("망치머리와 왼손 사이의 거리가 이 값(m) 이하이면 타격으로 판정")]
@@ -57,7 +64,6 @@ public class HammerHandAccidentDetector : MonoBehaviour
         if (leftHandTransform == null || hammerController.HammerHead == null) return;
 
         float distance = Vector3.Distance(hammerController.HammerHead.position, leftHandTransform.position);
-
         if (distance > hitRadius) return;
 
         TriggerAccident();
@@ -70,25 +76,31 @@ public class HammerHandAccidentDetector : MonoBehaviour
         if (showDebugLog)
             Debug.Log("[HammerHandAccidentDetector] 왼손 타격 사고 발생!");
 
-        if (toastController != null)
-            toastController.ShowFailToast("왼손 타격!\n망치가 손을 가격했습니다.", 4f);
+        if (safetyCheckObject != null && !safetyCheckObject.activeSelf)
+        {
+            if (showDebugLog)
+                Debug.Log("[HammerHandAccidentDetector] 안전 오브젝트 비활성화 — 사고 없음");
+
+            if (SafetyPracticeManager.Instance != null)
+                SafetyPracticeManager.Instance.ShowPassMessage(safetyPassMessage);
+
+            hasTriggeredAccident = false;
+            return;
+        }
 
         if (bloodEffectPrefab != null && leftHandTransform != null)
             Instantiate(bloodEffectPrefab, leftHandTransform.position, Quaternion.identity);
 
         if (hammerImpactSound != null && hammerController.HammerHead != null)
-            AudioSource.PlayClipAtPoint(hammerImpactSound, hammerController.HammerHead.position);
-
+            AudioSource.PlayClipAtPoint(hammerImpactSound, hammerController.HammerHead.position, soundVolume);
         if (bloodSquirtSound != null && leftHandTransform != null)
-            AudioSource.PlayClipAtPoint(bloodSquirtSound, leftHandTransform.position);
-
+            AudioSource.PlayClipAtPoint(bloodSquirtSound, leftHandTransform.position, soundVolume);
         if (screamSound != null && playerHead != null)
-            AudioSource.PlayClipAtPoint(screamSound, playerHead.position);
-
+            AudioSource.PlayClipAtPoint(screamSound, playerHead.position, soundVolume);
         if (fadeOutSound != null && playerHead != null)
-            AudioSource.PlayClipAtPoint(fadeOutSound, playerHead.position);
+            AudioSource.PlayClipAtPoint(fadeOutSound, playerHead.position, soundVolume);
 
-        if (PlayFadeOut.Instance != null)
-            PlayFadeOut.Instance.StartFade();
+        if (SafetyPracticeManager.Instance != null)
+            SafetyPracticeManager.Instance.TryFailAlways(failMessage);
     }
 }

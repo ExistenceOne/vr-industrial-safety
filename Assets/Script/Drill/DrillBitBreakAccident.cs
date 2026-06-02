@@ -12,8 +12,6 @@ public class DrillBitBreakAccident : MonoBehaviour
     [SerializeField] private Transform drillTip;
     [Tooltip("피 분출 이펙트 프리팹 (blood_spurt_effect) 연결")]
     [SerializeField] private GameObject bloodEffectPrefab;
-    [Tooltip("토스트 매니저 연결")]
-    [SerializeField] private ToastMessageController toastController;
 
     [Header("사운드 설정")]
     [Tooltip("비트 파손 시 재생될 금속 부러지는 효과음 (DrillBitSnap)")]
@@ -24,12 +22,16 @@ public class DrillBitBreakAccident : MonoBehaviour
     [SerializeField] private AudioClip screamSound;
     [Tooltip("화면이 어두워질 때 함께 재생되는 페이드아웃 효과음 (FadeOut)")]
     [SerializeField] private AudioClip fadeOutSound;
+    [Tooltip("모든 사고 효과음 볼륨 (0~1)")]
+    [SerializeField] [Range(0f, 1f)] private float soundVolume = 0.5f;
 
     [Header("사고 설정값")]
-    [Tooltip("벽과 드릴의 각도가 이 수치(도)를 넘어가면 비트 파손 발생")]
+    [Tooltip("복셀과 드릴의 각도가 이 수치(도)를 넘어가면 비트 파손 발생")]
     [SerializeField] private float maxSafeAngle = 15f;
-    [Tooltip("벽이나 나무판자의 Layer를 선택하세요")]
-    [SerializeField] private LayerMask targetLayer;
+    [Tooltip("각도를 검사할 복셀 오브젝트를 연결하세요")]
+    [SerializeField] private VoxelObject targetVoxel;
+    [Tooltip("사고 발생 시 표시할 실패 메시지")]
+    [SerializeField] private string failMessage = "비트 파손!\n파편이 눈을 가격했습니다.";
 
     private XRGrabInteractable grabInteractable;
     private bool isDrillRunning = false;
@@ -57,16 +59,19 @@ public class DrillBitBreakAccident : MonoBehaviour
 
     void Update()
     {
-        if (isAccidentTriggered || !isDrillRunning || drillTip == null || playerHead == null) return;
+        if (isAccidentTriggered || !isDrillRunning || drillTip == null || playerHead == null || targetVoxel == null) return;
 
-        // 드릴 끝부분 테스트
         Debug.DrawRay(drillTip.position, drillTip.forward * 0.1f, Color.red);
 
-        // 드릴 끝에서 앞(Forward)으로 10cm(0.1f) 길이의 레이저를 쏴서 목표물(Layer) 검출
-        if (Physics.Raycast(drillTip.position, drillTip.forward, out RaycastHit hit, 0.1f, targetLayer))
+        var col = targetVoxel.GetComponent<Collider>();
+        if (col == null) return;
+
+        if (Physics.Raycast(drillTip.position, drillTip.forward, out RaycastHit hit, 0.1f))
         {
-            // 벽의 수직 방향(Normal)의 반대 방향과 드릴의 방향 사이의 각도 계산
-            float angle = Vector3.Angle(-hit.normal, drillTip.forward);
+            if (hit.collider != col) return;
+
+            // 복셀 표면 수직 방향(-transform.forward)과 드릴 방향 사이 각도
+            float angle = Vector3.Angle(-targetVoxel.transform.forward, drillTip.forward);
 
             if (angle > maxSafeAngle)
             {
@@ -81,12 +86,6 @@ public class DrillBitBreakAccident : MonoBehaviour
         isDrillRunning = false;
         Debug.Log("[DrillBitBreakAccident] 비트 파손! 파편이 눈으로 튀었습니다.");
 
-        // 토스트 메시지 호출
-        if (toastController != null)
-        {
-            toastController.ShowFailToast("비트 파손!\n파편이 눈을 가격했습니다.", 4f);
-        }
-
         // 피 분출 이펙트 생성 (눈 부상 연출)
         if (bloodEffectPrefab != null)
         {
@@ -95,26 +94,16 @@ public class DrillBitBreakAccident : MonoBehaviour
 
         // 사운드 재생
         if (bitSnapSound != null)
-        {
-            AudioSource.PlayClipAtPoint(bitSnapSound, drillTip.position);
-        }
+            AudioSource.PlayClipAtPoint(bitSnapSound, drillTip.position, soundVolume);
         if (bloodSquirtSound != null)
-        {
-            AudioSource.PlayClipAtPoint(bloodSquirtSound, playerHead.position);
-        }
+            AudioSource.PlayClipAtPoint(bloodSquirtSound, playerHead.position, soundVolume);
         if (screamSound != null)
-        {
-            AudioSource.PlayClipAtPoint(screamSound, playerHead.position);
-        }
+            AudioSource.PlayClipAtPoint(screamSound, playerHead.position, soundVolume);
         if (fadeOutSound != null)
-        {
-            AudioSource.PlayClipAtPoint(fadeOutSound, playerHead.position);
-        }
+            AudioSource.PlayClipAtPoint(fadeOutSound, playerHead.position, soundVolume);
 
-        // 화면 페이드 아웃 연출
-        if (PlayFadeOut.Instance != null)
-        {
-            PlayFadeOut.Instance.StartFade();
-        }
+        // 실패 처리 (토스트 + 페이드아웃 + 씬 재시작)
+        if (SafetyPracticeManager.Instance != null)
+            SafetyPracticeManager.Instance.TryFailAlways(failMessage);
     }
 }
