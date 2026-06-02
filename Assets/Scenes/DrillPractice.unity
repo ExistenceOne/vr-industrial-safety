@@ -19456,6 +19456,98 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5685668502885659674}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1001 &2073479341
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 354830746145356558, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: displayText
+      value:
+      objectReference: {fileID: 603048933}
+    - target: {fileID: 354830746145356558, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: items.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 354830746145356558, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: items.Array.data[0].target
+      value:
+      objectReference: {fileID: 1677475664}
+    - target: {fileID: 354830746145356558, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: items.Array.data[1].target
+      value:
+      objectReference: {fileID: 1677475664}
+    - target: {fileID: 354830746145356558, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: items.Array.data[2].target
+      value:
+      objectReference: {fileID: 172219400}
+    - target: {fileID: 354830746145356558, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: items.Array.data[3].target
+      value:
+      objectReference: {fileID: 1533966499}
+    - target: {fileID: 2564662918303415682, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.89621
+      objectReference: {fileID: 0}
+    - target: {fileID: 2564662918303415682, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.799
+      objectReference: {fileID: 0}
+    - target: {fileID: 2564662918303415682, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.86646
+      objectReference: {fileID: 0}
+    - target: {fileID: 2564662918303415682, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2564662918303415682, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2564662918303415682, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2564662918303415682, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2564662918303415682, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2564662918303415682, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2564662918303415682, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8646525317325841745, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+      propertyPath: m_Name
+      value: WearSafetyQuest
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+--- !u!114 &2073479342 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 354830746145356558, guid: c744461492b28a049b8db7b993f19f72, type: 3}
+  m_PrefabInstance: {fileID: 2073479341}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8dd669f931683842a0e8da175c47ea2, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::ItemStatusDisplay
 --- !u!1001 &8775509568574885300
 PrefabInstance:
   m_ObjectHideFlags: 0
