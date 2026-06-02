@@ -9,7 +9,7 @@ using UnityEngine.XR.Interaction.Toolkit.Inputs.Readers;
 public class PauseMenuController : MonoBehaviour
 {
     [Header("Input")]
-    [SerializeField] XRInputValueReader<bool> m_MenuButtonInput = new XRInputValueReader<bool>("Menu Button");
+    [SerializeField] XRInputValueReader<float> m_MenuButtonInput = new XRInputValueReader<float>("Menu");
 
     [Header("Menu")]
     [SerializeField] GameObject menuPanel;
@@ -38,7 +38,7 @@ public class PauseMenuController : MonoBehaviour
 
     void Update()
     {
-        bool pressed = m_MenuButtonInput?.ReadValue() ?? false;
+        bool pressed = (m_MenuButtonInput?.ReadValue() ?? 0f) >= 1f;
 
         if (pressed && !m_PrevPressed)
             ToggleMenu();
