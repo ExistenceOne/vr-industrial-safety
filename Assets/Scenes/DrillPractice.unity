@@ -495,6 +495,94 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33fabc0c88784b248ba249d3b34320ed, type: 3}
+--- !u!1001 &4235823976769552342
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 883756811952186387, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: playerHead
+      value:
+      objectReference: {fileID: 2079368815}
+    - target: {fileID: 883756811952186387, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: toastController
+      value:
+      objectReference: {fileID: 1420299307}
+    - target: {fileID: 2834873648439768419, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.40385
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834873648439768419, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834873648439768419, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.31891
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834873648439768419, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834873648439768419, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834873648439768419, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834873648439768419, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834873648439768419, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834873648439768419, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2834873648439768419, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3330798357013331450, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_Name
+      value: Room
+      objectReference: {fileID: 0}
+    - target: {fileID: 3404177767207333964, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_InteractionManager
+      value:
+      objectReference: {fileID: 747528643344703582}
+    - target: {fileID: 4537135123249583822, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: playerHead
+      value:
+      objectReference: {fileID: 2079368815}
+    - target: {fileID: 4537135123249583822, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: toastController
+      value:
+      objectReference: {fileID: 1420299307}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+--- !u!114 &4235823976769552349 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3404177767207333964, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+  m_PrefabInstance: {fileID: 4235823976769552342}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable
 --- !u!1 &172219400 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 501830824338953497, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
