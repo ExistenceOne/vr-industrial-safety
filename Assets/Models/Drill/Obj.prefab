@@ -391,7 +391,7 @@ MonoBehaviour:
   hapticDuration: 0.08
   hapticInterval: 0.06
   drillSoundClip: {fileID: 8300000, guid: 060030c04ef567348a419dc1c61c6204, type: 3}
-  drillSoundVolume: 0.113
+  drillSoundVolume: 0.3
   showHapticLog: 1
   hapticLogInterval: 0.5
 --- !u!114 &899425916190726605
