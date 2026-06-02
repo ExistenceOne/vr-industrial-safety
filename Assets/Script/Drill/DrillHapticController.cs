@@ -16,8 +16,17 @@ public class DrillHapticController : MonoBehaviour
 
     [Header("Drill Sound Settings")]
     [SerializeField] private AudioClip drillSoundClip;
+
     [Range(0f, 1f)]
     [SerializeField] private float drillSoundVolume = 0.8f;
+
+    [Header("Drill Quest 연동")]
+    [Tooltip("드릴 깊이 퀘스트를 연결하세요. 100% 이후 트리거 유지 여부 판정에 사용됩니다.")]
+    [SerializeField] private DrillDepthQuest drillDepthQuest;
+
+    [Header("Safety Check")]
+    [Tooltip("체크 시 보호구 미착용 상태에서 드릴 작동 버튼을 누르면 실패 처리합니다.")]
+    [SerializeField] private bool failIfNoGloveOnDrillUse = true;
 
     [Header("Debug Settings")]
     [SerializeField] private bool showHapticLog = true;
@@ -74,6 +83,9 @@ public class DrillHapticController : MonoBehaviour
             return;
 
         if (!isDrillActive)
+            return;
+
+        if (SafetyPracticeManager.Instance != null && SafetyPracticeManager.Instance.IsFailing)
             return;
 
         if (!currentDevice.isValid)
@@ -138,6 +150,11 @@ public class DrillHapticController : MonoBehaviour
         isDrillActive = false;
         currentDevice = default;
 
+        if (drillDepthQuest != null)
+        {
+            drillDepthQuest.SetDrillTriggerHeld(false);
+        }
+
         StopDrillSound();
 
         Debug.Log("[DrillHapticController] 드릴 놓음");
@@ -148,9 +165,41 @@ public class DrillHapticController : MonoBehaviour
         if (!isGrabbed)
             return;
 
+        if (SafetyPracticeManager.Instance != null && SafetyPracticeManager.Instance.IsFailing)
+            return;
+
+        if (failIfNoGloveOnDrillUse && SafetyPracticeManager.Instance != null)
+        {
+            bool failedByNoGlove = SafetyPracticeManager.Instance.TryFailIfNoGlove();
+
+            if (failedByNoGlove)
+            {
+                isDrillActive = false;
+
+                if (drillDepthQuest != null)
+                {
+                    drillDepthQuest.SetDrillTriggerHeld(false);
+                }
+
+                StopDrillSound();
+
+                Debug.Log("[DrillHapticController] 보호구 미착용 상태에서 드릴 사용 → 실패 처리");
+                return;
+            }
+        }
+
         isDrillActive = true;
         hapticTimer = hapticInterval;
         hapticLogTimer = hapticLogInterval;
+
+        if (drillDepthQuest != null)
+        {
+            drillDepthQuest.SetDrillTriggerHeld(true);
+        }
+        else
+        {
+            Debug.LogWarning("[DrillHapticController] DrillDepthQuest가 연결되지 않았습니다.");
+        }
 
         PlayDrillSound();
 
@@ -160,6 +209,11 @@ public class DrillHapticController : MonoBehaviour
     private void OnDrillDeactivated(DeactivateEventArgs args)
     {
         isDrillActive = false;
+
+        if (drillDepthQuest != null)
+        {
+            drillDepthQuest.SetDrillTriggerHeld(false);
+        }
 
         StopDrillSound();
 

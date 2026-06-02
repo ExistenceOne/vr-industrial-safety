@@ -4,12 +4,15 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 /// <summary>
 /// XR 컨트롤러로 잡는 순간 아이템을 소비합니다. (SetActive false)
-/// 소비 시점을 다른 스크립트에서 감지하려면 OnItemConsumed 이벤트를 구독하세요.
+/// 보호구 아이템인 경우 SafetyPracticeManager에 착용 상태를 전달합니다.
 /// </summary>
 [RequireComponent(typeof(XRGrabInteractable))]
 public class ConsumableItem : MonoBehaviour
 {
     public event System.Action OnItemConsumed;
+
+    [Header("Safety Gear Settings")]
+    [SerializeField] private bool isSafetyGear = true;
 
     private XRGrabInteractable grabInteractable;
 
@@ -31,6 +34,20 @@ public class ConsumableItem : MonoBehaviour
     private void OnGrabbed(SelectEnterEventArgs args)
     {
         Debug.Log($"[ConsumableItem] {gameObject.name} 소비됨");
+
+        if (isSafetyGear)
+        {
+            if (SafetyPracticeManager.Instance != null)
+            {
+                SafetyPracticeManager.Instance.EquipGlove();
+                Debug.Log($"[ConsumableItem] {gameObject.name} 보호구 착용 처리 완료");
+            }
+            else
+            {
+                Debug.LogWarning("[ConsumableItem] SafetyPracticeManager.Instance가 없습니다.");
+            }
+        }
+
         OnItemConsumed?.Invoke();
         gameObject.SetActive(false);
     }

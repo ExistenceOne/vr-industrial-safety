@@ -252,6 +252,16 @@ public class GrinderController : MonoBehaviour
     {
         if (!isGrabbed) return;
 
+        if (SafetyPracticeManager.Instance != null &&
+            SafetyPracticeManager.Instance.TryFailIfNoGlove())
+        {
+            isActive = false;
+            StopGrindSound();
+
+            Debug.Log("[GrinderController] 보호구 미착용으로 그라인더 작업 실패 처리");
+            return;
+        }
+
         isActive = true;
         hapticTimer = hapticInterval;
         hapticLogTimer = hapticLogInterval;

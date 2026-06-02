@@ -17,6 +17,16 @@ public class NailHitController : MonoBehaviour
     [SerializeField] private float fixedDepth = 0.08f;
     [SerializeField] private float maxSinkDepth = 0.4f;
 
+    [Header("Nail Complete By Contact Settings")]
+    [SerializeField] private bool useHeadContactCompleteLimit = true;
+    [SerializeField] private Collider nailHeadContactCollider;
+    [SerializeField] private Collider completeTargetCollider;
+    [SerializeField] private float contactCheckPadding = 0.001f;
+
+    [Header("Nail Complete By Y Settings")]
+    [SerializeField] private bool useHeadYCompleteLimit = false;
+    [SerializeField] private float completeHeadY = 0.7301f;
+
     [Header("Hit Judge Settings")]
     [SerializeField] private float centerHitThreshold = 0.08f;
 
@@ -25,12 +35,23 @@ public class NailHitController : MonoBehaviour
     [SerializeField] private float maxRecoverableTiltAngle = 35f;
     [SerializeField] private float straightThreshold = 2f;
 
+    [Header("Complete Visual Settings")]
+    [SerializeField] private bool changeColorOnComplete = true;
+    [SerializeField] private Renderer[] nailRenderers;
+    [SerializeField] private Color completeColor = new Color(0.35f, 1.0f, 0.35f, 1f);
+
+
+    [SerializeField] private float sideHitSinkMultiplier = 0.6f;
+
+
     [Header("Toast")]
     [SerializeField] private ToastMessageController toastController;
     [SerializeField] private float toastShowTime = 3f;
 
     [Header("Debug")]
     [SerializeField] private bool showDebugLog = true;
+
+    
 
     private NailState currentState = NailState.Holding;
 
@@ -44,6 +65,7 @@ public class NailHitController : MonoBehaviour
 
     private bool hasShownStartMessage = false;
     private bool hasShownFixedMessage = false;
+    private bool isCompleted = false;
 
     private void Start()
     {
@@ -53,6 +75,9 @@ public class NailHitController : MonoBehaviour
 
     public void OnHitByHammer(Transform hammerHead)
     {
+        if (isCompleted)
+            return;
+
         if (hammerHead == null)
             return;
 
@@ -63,7 +88,7 @@ public class NailHitController : MonoBehaviour
         }
 
         Vector3 nailAxis = -transform.forward;
-        Vector3 nailTopCenter = transform.position + nailAxis * (nailHeight * 0.5f);
+        Vector3 nailTopCenter = GetNailTopCenter();
 
         Vector3 hammerFlatPosition = new Vector3(
             hammerHead.position.x,
@@ -80,6 +105,8 @@ public class NailHitController : MonoBehaviour
             Debug.Log(
                 "[NailHitController] 타격 거리: " + distanceFromCenter.ToString("F3")
                 + " / 박힘 깊이: " + currentSinkDepth.ToString("F3")
+                + " / 헤드 Y: " + nailTopCenter.y.ToString("F4")
+                + " / 접촉 완료 여부: " + IsHeadTouchingCompleteTarget()
                 + " / 기울기: " + GetTotalTiltAngle().ToString("F1")
                 + " / 상태: " + currentState
             );
@@ -121,9 +148,23 @@ public class NailHitController : MonoBehaviour
         }
     }
 
+    private void ShowCompleteMessage()
+    {
+        if (toastController != null)
+        {
+            toastController.ShowSuccessToast("못 박기가 완료되었습니다.", toastShowTime);
+        }
+    }
+
     private void HandleCenterHit()
     {
+        if (isCompleted)
+            return;
+
         SinkNail();
+
+        if (isCompleted)
+            return;
 
         if (currentState == NailState.Holding && currentSinkDepth >= fixedDepth)
         {
@@ -143,43 +184,49 @@ public class NailHitController : MonoBehaviour
 
     private void HandleSideHit(Vector3 hitDirection)
     {
+        if (isCompleted)
+            return;
+
         TiltOrRecoverNail(hitDirection);
 
-        if (currentState == NailState.Holding && currentSinkDepth < fixedDepth)
-        {
-            SinkNail();
+        SinkNail();
 
-            if (currentSinkDepth >= fixedDepth)
-            {
-                currentState = NailState.Fixed;
-                ShowFixedMessage();
-            }
+        if (isCompleted)
+            return;
+
+        if (currentState == NailState.Holding && currentSinkDepth >= fixedDepth)
+        {
+            currentState = NailState.Fixed;
+            ShowFixedMessage();
         }
         else if (currentState == NailState.Fixed || currentState == NailState.Driven)
         {
             currentState = NailState.Driven;
-
-            if (IsAlmostStraight())
-            {
-                SinkNail();
-
-                if (showDebugLog)
-                {
-                    Debug.Log("[NailHitController] 못이 거의 펴진 상태라 다시 정상적으로 박힘");
-                }
-            }
         }
 
         fragmentAccident?.TryTriggerAccident(GetTotalTiltAngle());
 
         if (showDebugLog)
         {
-            Debug.Log("[NailHitController] 비스듬한 타격 처리 완료 / 현재 기울기: " + GetTotalTiltAngle().ToString("F1"));
+            Debug.Log(
+                "[NailHitController] 비스듬한 타격: 못이 기울어지고 아래로도 박힘"
+                + " / 현재 기울기: " + GetTotalTiltAngle().ToString("F1")
+                + " / 박힘 깊이: " + currentSinkDepth.ToString("F3")
+            );
         }
     }
 
     private void SinkNail()
     {
+        if (isCompleted)
+            return;
+
+        if (IsCompleteConditionMet())
+        {
+            CompleteNail();
+            return;
+        }
+
         if (currentSinkDepth >= maxSinkDepth)
         {
             if (showDebugLog)
@@ -191,8 +238,162 @@ public class NailHitController : MonoBehaviour
         }
 
         Vector3 nailAxis = -transform.forward;
-        transform.position += -nailAxis * sinkAmount;
+        Vector3 moveDelta = -nailAxis * sinkAmount;
+
+        Vector3 previousPosition = transform.position;
+        float previousSinkDepth = currentSinkDepth;
+
+        transform.position += moveDelta;
         currentSinkDepth += sinkAmount;
+
+        if (IsCompleteConditionMet())
+        {
+            ClampToContactPosition(previousPosition, moveDelta);
+
+            currentSinkDepth = previousSinkDepth + sinkAmount;
+
+            CompleteNail();
+        }
+    }
+
+    private bool IsCompleteConditionMet()
+    {
+        if (useHeadContactCompleteLimit && IsHeadTouchingCompleteTarget())
+            return true;
+
+        if (useHeadYCompleteLimit)
+        {
+            Vector3 currentTopCenter = GetNailTopCenter();
+
+            if (currentTopCenter.y <= completeHeadY)
+                return true;
+        }
+
+        return false;
+    }
+
+    private bool IsHeadTouchingCompleteTarget()
+    {
+        if (nailHeadContactCollider == null || completeTargetCollider == null)
+            return false;
+
+        Bounds headBounds = nailHeadContactCollider.bounds;
+        Bounds targetBounds = completeTargetCollider.bounds;
+
+        headBounds.Expand(contactCheckPadding);
+        targetBounds.Expand(contactCheckPadding);
+
+        return headBounds.Intersects(targetBounds);
+    }
+
+    private void ClampToContactPosition(Vector3 startPosition, Vector3 moveDelta)
+    {
+        if (!useHeadContactCompleteLimit)
+            return;
+
+        if (nailHeadContactCollider == null || completeTargetCollider == null)
+            return;
+
+        float low = 0f;
+        float high = 1f;
+
+        for (int i = 0; i < 12; i++)
+        {
+            float mid = (low + high) * 0.5f;
+
+            transform.position = startPosition + moveDelta * mid;
+
+            if (IsHeadTouchingCompleteTarget())
+            {
+                high = mid;
+            }
+            else
+            {
+                low = mid;
+            }
+        }
+
+        transform.position = startPosition + moveDelta * high;
+
+        if (showDebugLog)
+        {
+            Debug.Log("[NailHitController] 네일 헤드 Plane이 완료 오브젝트에 닿은 위치로 보정됨");
+        }
+    }
+
+    private Vector3 GetNailTopCenter()
+    {
+        if (nailHeadContactCollider != null)
+        {
+            return nailHeadContactCollider.bounds.center;
+        }
+
+        Vector3 nailAxis = -transform.forward;
+        return transform.position + nailAxis * (nailHeight * 0.5f);
+    }
+
+    private void ApplyCompleteVisual()
+    {
+        if (!changeColorOnComplete)
+            return;
+
+        if (nailRenderers == null || nailRenderers.Length == 0)
+        {
+            if (showDebugLog)
+            {
+                Debug.LogWarning("[NailHitController] 완료 색상 변경 대상 Renderer가 연결되지 않았습니다.");
+            }
+
+            return;
+        }
+
+        for (int i = 0; i < nailRenderers.Length; i++)
+        {
+            if (nailRenderers[i] == null)
+                continue;
+
+            Material materialInstance = nailRenderers[i].material;
+            materialInstance.color = completeColor;
+        }
+
+        if (showDebugLog)
+        {
+            Debug.Log("[NailHitController] 완료된 못 색상이 초록색으로 변경되었습니다.");
+        }
+    }
+
+
+    private void CompleteNail()
+    {
+        if (isCompleted)
+            return;
+
+        isCompleted = true;
+        currentState = NailState.Driven;
+
+        ApplyCompleteVisual();
+        ShowCompleteMessage();
+
+        if (SafetyPracticeManager.Instance != null)
+        {
+            SafetyPracticeManager.Instance.AddHammerNailProgress();
+            Debug.Log("[NailHitController] 못 완료 progress 증가 호출");
+        }
+        else
+        {
+            Debug.LogWarning("[NailHitController] SafetyPracticeManager.Instance가 null이라 progress 증가 실패");
+        }
+
+        if (showDebugLog)
+        {
+            Vector3 nailTopCenter = GetNailTopCenter();
+
+            Debug.Log(
+                "[NailHitController] 못 박기 완료"
+                + " / 헤드 위치: " + nailTopCenter
+                + " / 박힘 깊이: " + currentSinkDepth.ToString("F3")
+            );
+        }
     }
 
     private void TiltOrRecoverNail(Vector3 hitDirection)

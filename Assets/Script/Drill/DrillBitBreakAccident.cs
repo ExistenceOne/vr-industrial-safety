@@ -31,7 +31,10 @@ public class DrillBitBreakAccident : MonoBehaviour
     [Tooltip("각도를 검사할 복셀 오브젝트를 연결하세요")]
     [SerializeField] private VoxelObject targetVoxel;
     [Tooltip("사고 발생 시 표시할 실패 메시지")]
-    [SerializeField] private string failMessage = "비트 파손!\n파편이 눈을 가격했습니다.";
+    [SerializeField, TextArea(4, 10)]
+    private string failMessage =
+    "비트 파손!\n" +
+    "파손된 드릴 비트 파편이 눈을 가격했습니다.";
 
     private XRGrabInteractable grabInteractable;
     private bool isDrillRunning = false;

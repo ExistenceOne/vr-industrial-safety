@@ -17,11 +17,14 @@ public class GrinderHandAccidentDetector : MonoBehaviour
     [Header("안전 확인 오브젝트")]
     [Tooltip("이 오브젝트가 비활성화 상태면 안전한 것으로 판단해 긍정 메시지를 표시합니다.")]
     [SerializeField] private GameObject safetyCheckObject;
+
     [Tooltip("안전 확인 시 표시할 긍정 메시지")]
+    [TextArea(3, 8)]
     [SerializeField] private string safetyPassMessage = "안전하게 작업하고 있습니다!";
 
     [Header("메시지 설정")]
     [Tooltip("사고 발생 시 표시할 실패 메시지")]
+    [TextArea(4, 12)]
     [SerializeField] private string failMessage = "손 절단 사고!\n그라인더 날에 손이 접촉했습니다.";
 
     [Header("Debug")]

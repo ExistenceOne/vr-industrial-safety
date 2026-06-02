@@ -27,6 +27,21 @@ public class VoxelObject : MonoBehaviour
     [Header("등록할 GrinderController")]
     public GrinderController blade;
 
+    [Header("Quest 연동")]
+    [SerializeField] private bool useQuestProgress = true;
+
+    [Tooltip("이 비율 이상 깎이면 퀘스트 완료로 처리합니다. 0.3 = 30%")]
+    [SerializeField, Range(0.01f, 1f)]
+    private float questCompleteCarvedRatio = 0.15f;
+
+    [SerializeField] private bool showQuestDebugLog = true;
+
+    [Header("Drill Depth Quest 연동")]
+    [Tooltip("드릴 깊이 퀘스트 대상일 때만 체크하세요. 그라인더 대상은 체크하지 않습니다.")]
+    [SerializeField] private bool notifyDrillDepthQuest = false;
+
+    private DrillDepthQuest drillDepthQuest;
+
     private float[,,] voxels;
     private MeshFilter meshFilter;
     private MeshCollider meshCollider;
@@ -39,11 +54,22 @@ public class VoxelObject : MonoBehaviour
     // 최초 복셀 수 (초기화 시 1회 계산)
     private int initialVoxelCount = 0;
 
+    // 드릴 퀘스트 전용: 최초 복셀 값 총합
+    private float initialVoxelValueSum = 0f;
+
+    // 퀘스트 중복 증가 방지
+    private bool isQuestCompleted = false;
+
     private void Awake()
     {
-        if (GetComponent<MeshFilter>() == null)   gameObject.AddComponent<MeshFilter>();
-        if (GetComponent<MeshRenderer>() == null)  gameObject.AddComponent<MeshRenderer>();
-        if (GetComponent<MeshCollider>() == null)  gameObject.AddComponent<MeshCollider>();
+        if (GetComponent<MeshFilter>() == null)
+            gameObject.AddComponent<MeshFilter>();
+
+        if (GetComponent<MeshRenderer>() == null)
+            gameObject.AddComponent<MeshRenderer>();
+
+        if (GetComponent<MeshCollider>() == null)
+            gameObject.AddComponent<MeshCollider>();
 
         if (GetComponent<Rigidbody>() == null)
         {
@@ -52,7 +78,7 @@ public class VoxelObject : MonoBehaviour
             rb.constraints = RigidbodyConstraints.FreezeAll;
         }
 
-        meshFilter   = GetComponent<MeshFilter>();
+        meshFilter = GetComponent<MeshFilter>();
         meshCollider = GetComponent<MeshCollider>();
         meshCollider.convex = false;
 
@@ -65,32 +91,51 @@ public class VoxelObject : MonoBehaviour
         voxelSizeZ = voxelSize;
 
         voxels = new float[resX + 1, resY + 1, resZ + 1];
+
         for (int x = 0; x <= resX; x++)
-        for (int y = 0; y <= resY; y++)
-        for (int z = 0; z <= resZ; z++)
-        {
-            bool isBorder = x == 0 || x == resX || y == 0 || y == resY || z == 0 || z == resZ;
-            voxels[x, y, z] = isBorder ? 0f : 1f;
-        }
+            for (int y = 0; y <= resY; y++)
+                for (int z = 0; z <= resZ; z++)
+                {
+                    bool isBorder = x == 0 || x == resX || y == 0 || y == resY || z == 0 || z == resZ;
+                    voxels[x, y, z] = isBorder ? 0f : 1f;
+                }
 
         initialVoxelCount = CountActiveVoxels();
+        initialVoxelValueSum = GetCurrentVoxelValueSum();
 
         RebuildMesh();
 
         if (blade != null)
+        {
             blade.RegisterTarget(this);
+        }
         else
-            Debug.LogWarning("VoxelObject: Blade가 연결되지 않았습니다.");
+        {
+            Debug.LogWarning("[VoxelObject] Blade가 연결되지 않았습니다.");
+        }
 
-        Debug.Log($"VoxelObject 초기화 완료. Mesh vertexCount: {meshFilter.sharedMesh?.vertexCount}");
+        if (notifyDrillDepthQuest)
+        {
+            drillDepthQuest = GetComponentInParent<DrillDepthQuest>();
+
+            if (drillDepthQuest == null)
+            {
+                Debug.LogWarning("[VoxelObject] Notify Drill Depth Quest가 켜져 있지만 부모에서 DrillDepthQuest를 찾지 못했습니다.");
+            }
+        }
+
+        Debug.Log($"[VoxelObject] 초기화 완료. Mesh vertexCount: {meshFilter.sharedMesh?.vertexCount}");
     }
 
     private void Update()
     {
-        if (!meshDirty) return;
+        if (!meshDirty)
+            return;
 
         colliderUpdateTimer -= Time.deltaTime;
-        if (colliderUpdateTimer > 0f) return;
+
+        if (colliderUpdateTimer > 0f)
+            return;
 
         colliderUpdateTimer = ColliderUpdateInterval;
         meshCollider.sharedMesh = null;
@@ -98,28 +143,67 @@ public class VoxelObject : MonoBehaviour
         meshDirty = false;
     }
 
-    /// <summary>현재 활성 복셀 수를 반환합니다.</summary>
+    /// <summary>
+    /// 현재 활성 복셀 수를 반환합니다.
+    /// </summary>
     public int GetCurrentVoxelCount()
     {
         return CountActiveVoxels();
     }
 
-    /// <summary>최초 복셀 수를 반환합니다.</summary>
+    /// <summary>
+    /// 최초 복셀 수를 반환합니다.
+    /// </summary>
     public int GetInitialVoxelCount()
     {
         return initialVoxelCount;
     }
 
-    /// <summary>현재 깎인 비율 (0~1)을 반환합니다. 1 = 100% 깎임</summary>
+    /// <summary>
+    /// 기존 그라인더 퀘스트용 깎임 비율입니다.
+    /// 복셀이 완전히 0이 된 개수를 기준으로 계산합니다.
+    /// 기존 그라인더 로직 보호를 위해 수정하지 않습니다.
+    /// </summary>
     public float GetCarvedRatio()
     {
-        if (initialVoxelCount == 0) return 0f;
+        if (initialVoxelCount == 0)
+            return 0f;
+
         int current = CountActiveVoxels();
         return 1f - (float)current / initialVoxelCount;
     }
 
-    /// <summary>지정 방향으로 입구면부터 연속으로 깎인 깊이 비율 (0~1)을 반환합니다.</summary>
-    /// <param name="minCarvedPerLayer">레이어당 깎인 것으로 인정할 최소 복셀 수</param>
+    /// <summary>
+    /// 드릴 퀘스트 전용 깎임 비율입니다.
+    /// 복셀이 완전히 사라지지 않아도, 값이 줄어든 정도를 진행률로 계산합니다.
+    /// 그라인더 기존 퀘스트에는 사용하지 않습니다.
+    /// </summary>
+    public float GetCarvedDensityRatio()
+    {
+        if (initialVoxelValueSum <= 0f)
+            return 0f;
+
+        float currentValueSum = GetCurrentVoxelValueSum();
+        return Mathf.Clamp01(1f - currentValueSum / initialVoxelValueSum);
+    }
+
+    private float GetCurrentVoxelValueSum()
+    {
+        float sum = 0f;
+
+        for (int x = 0; x <= resX; x++)
+            for (int y = 0; y <= resY; y++)
+                for (int z = 0; z <= resZ; z++)
+                {
+                    sum += voxels[x, y, z];
+                }
+
+        return sum;
+    }
+
+    /// <summary>
+    /// 지정 방향으로 입구면부터 연속으로 깎인 깊이 비율을 반환합니다.
+    /// </summary>
     public float GetCarvedDepthRatio(Vector3 worldDirection, int minCarvedPerLayer = 1)
     {
         Vector3 localDir = transform.InverseTransformDirection(worldDirection).normalized;
@@ -135,33 +219,45 @@ public class VoxelObject : MonoBehaviour
         {
             total = resZ - 1;
             bool forward = localDir.z > 0;
+
             for (int i = 1; i < resZ; i++)
             {
                 int z = forward ? i : resZ - i;
-                if (IsLayerCarved(z, axis: 2, minCarvedPerLayer)) carved = i;
-                else break;
+
+                if (IsLayerCarved(z, axis: 2, minCarvedPerLayer))
+                    carved = i;
+                else
+                    break;
             }
         }
         else if (ay >= ax)
         {
             total = resY - 1;
             bool forward = localDir.y > 0;
+
             for (int i = 1; i < resY; i++)
             {
                 int y = forward ? i : resY - i;
-                if (IsLayerCarved(y, axis: 1, minCarvedPerLayer)) carved = i;
-                else break;
+
+                if (IsLayerCarved(y, axis: 1, minCarvedPerLayer))
+                    carved = i;
+                else
+                    break;
             }
         }
         else
         {
             total = resX - 1;
             bool forward = localDir.x > 0;
+
             for (int i = 1; i < resX; i++)
             {
                 int x = forward ? i : resX - i;
-                if (IsLayerCarved(x, axis: 0, minCarvedPerLayer)) carved = i;
-                else break;
+
+                if (IsLayerCarved(x, axis: 0, minCarvedPerLayer))
+                    carved = i;
+                else
+                    break;
             }
         }
 
@@ -171,45 +267,65 @@ public class VoxelObject : MonoBehaviour
     private bool IsLayerCarved(int sliceIndex, int axis, int minCount)
     {
         int count = 0;
+
         if (axis == 2)
         {
             for (int x = 1; x < resX; x++)
-            for (int y = 1; y < resY; y++)
-                if (voxels[x, y, sliceIndex] < 0.5f && ++count >= minCount) return true;
+                for (int y = 1; y < resY; y++)
+                {
+                    if (voxels[x, y, sliceIndex] < 0.5f && ++count >= minCount)
+                        return true;
+                }
         }
         else if (axis == 1)
         {
             for (int x = 1; x < resX; x++)
-            for (int z = 1; z < resZ; z++)
-                if (voxels[x, sliceIndex, z] < 0.5f && ++count >= minCount) return true;
+                for (int z = 1; z < resZ; z++)
+                {
+                    if (voxels[x, sliceIndex, z] < 0.5f && ++count >= minCount)
+                        return true;
+                }
         }
         else
         {
             for (int y = 1; y < resY; y++)
-            for (int z = 1; z < resZ; z++)
-                if (voxels[sliceIndex, y, z] < 0.5f && ++count >= minCount) return true;
+                for (int z = 1; z < resZ; z++)
+                {
+                    if (voxels[sliceIndex, y, z] < 0.5f && ++count >= minCount)
+                        return true;
+                }
         }
+
         return false;
     }
 
     private int CountActiveVoxels()
     {
         int count = 0;
+
         for (int x = 0; x <= resX; x++)
-        for (int y = 0; y <= resY; y++)
-        for (int z = 0; z <= resZ; z++)
-        {
-            if (voxels[x, y, z] > 0f) count++;
-        }
+            for (int y = 0; y <= resY; y++)
+                for (int z = 0; z <= resZ; z++)
+                {
+                    if (voxels[x, y, z] > 0f)
+                        count++;
+                }
+
         return count;
     }
 
     public void Carve(Vector3 worldCenter, float worldRadius, float depth, Vector3 worldCarveAxis)
     {
-        Vector3 localCenter    = transform.InverseTransformPoint(worldCenter);
+        if (blade == null)
+        {
+            Debug.LogWarning("[VoxelObject] blade가 null이라 Carve를 진행할 수 없습니다.");
+            return;
+        }
+
+        Vector3 localCenter = transform.InverseTransformPoint(worldCenter);
         Vector3 localCarveAxis = transform.InverseTransformDirection(worldCarveAxis).normalized;
 
-        float localRadius     = worldRadius / transform.lossyScale.x;
+        float localRadius = worldRadius / transform.lossyScale.x;
         float localHalfHeight = blade.cylinderHalfHeight / transform.lossyScale.y;
 
         float effectiveDepth = depth / Mathf.Max(0.01f, hardness);
@@ -217,35 +333,104 @@ public class VoxelObject : MonoBehaviour
         bool changed = false;
 
         for (int x = 0; x <= resX; x++)
-        for (int y = 0; y <= resY; y++)
-        for (int z = 0; z <= resZ; z++)
-        {
-            Vector3 voxelLocalPos = VoxelToLocal(x, y, z);
-            Vector3 diff = voxelLocalPos - localCenter;
+            for (int y = 0; y <= resY; y++)
+                for (int z = 0; z <= resZ; z++)
+                {
+                    Vector3 voxelLocalPos = VoxelToLocal(x, y, z);
+                    Vector3 diff = voxelLocalPos - localCenter;
 
-            float alongAxis = Vector3.Dot(diff, localCarveAxis);
-            if (Mathf.Abs(alongAxis) > localHalfHeight) continue;
+                    float alongAxis = Vector3.Dot(diff, localCarveAxis);
 
-            Vector3 radial = diff - alongAxis * localCarveAxis;
-            float dist     = radial.magnitude / localRadius;
-            if (dist > 1f) continue;
+                    if (Mathf.Abs(alongAxis) > localHalfHeight)
+                        continue;
 
-            float carveAmount = effectiveDepth * (1f - dist);
-            voxels[x, y, z] = Mathf.Max(0f, voxels[x, y, z] - carveAmount);
-            changed = true;
-        }
+                    Vector3 radial = diff - alongAxis * localCarveAxis;
+                    float dist = radial.magnitude / localRadius;
 
-        if (!changed) return;
+                    if (dist > 1f)
+                        continue;
+
+                    float beforeValue = voxels[x, y, z];
+                    float carveAmount = effectiveDepth * (1f - dist);
+
+                    voxels[x, y, z] = Mathf.Max(0f, voxels[x, y, z] - carveAmount);
+
+                    if (!Mathf.Approximately(beforeValue, voxels[x, y, z]))
+                        changed = true;
+                }
+
+        // 드릴 퀘스트는 실제로 깎였는지와 별개로,
+        // Carve가 호출되었다는 것 자체를 "드릴 접촉/작동 중"으로 판단합니다.
+        NotifyDrillDepthQuestIfNeeded();
+
+        if (!changed)
+            return;
 
         RebuildMesh();
         meshDirty = true;
 
         EmitParticle(worldCenter, worldCarveAxis);
+
+        CheckQuestProgress();
+    }
+
+    private void NotifyDrillDepthQuestIfNeeded()
+    {
+        if (!notifyDrillDepthQuest)
+            return;
+
+        if (drillDepthQuest == null)
+            return;
+
+        drillDepthQuest.NotifyDrillingContact();
+    }
+
+    private void CheckQuestProgress()
+    {
+        if (!useQuestProgress)
+            return;
+
+        if (isQuestCompleted)
+            return;
+
+        float carvedRatio = GetCarvedRatio();
+
+        float objectProgress01 = Mathf.Clamp01(carvedRatio / questCompleteCarvedRatio);
+
+        if (SafetyPracticeManager.Instance != null)
+        {
+            SafetyPracticeManager.Instance.SetLiveQuestProgressByObject(objectProgress01);
+        }
+
+        if (showQuestDebugLog)
+        {
+            Debug.Log($"[VoxelObject] {gameObject.name} 깎인 비율: {(carvedRatio * 100f):F1}% / 완료 기준: {(questCompleteCarvedRatio * 100f):F1}% / 물체 진행률: {(objectProgress01 * 100f):F0}%");
+        }
+
+        if (carvedRatio < questCompleteCarvedRatio)
+            return;
+
+        isQuestCompleted = true;
+
+        if (SafetyPracticeManager.Instance != null)
+        {
+            SafetyPracticeManager.Instance.AddQuestProgress();
+
+            if (showQuestDebugLog)
+            {
+                Debug.Log($"[VoxelObject] {gameObject.name} 연삭 완료. 퀘스트 진행도 1 증가");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[VoxelObject] SafetyPracticeManager.Instance를 찾을 수 없습니다.");
+        }
     }
 
     private void EmitParticle(Vector3 worldCenter, Vector3 worldCarveAxis)
     {
-        if (carveParticle == null) return;
+        if (carveParticle == null)
+            return;
 
         carveParticle.transform.position = worldCenter;
         carveParticle.transform.rotation = Quaternion.LookRotation(-worldCarveAxis);
@@ -263,7 +448,19 @@ public class VoxelObject : MonoBehaviour
 
     private void RebuildMesh()
     {
-        Mesh mesh = MarchingCubes.Generate(voxels, resX, resY, resZ, voxelSizeX, voxelSizeY, voxelSizeZ, sizeX, sizeY, sizeZ);
+        Mesh mesh = MarchingCubes.Generate(
+            voxels,
+            resX,
+            resY,
+            resZ,
+            voxelSizeX,
+            voxelSizeY,
+            voxelSizeZ,
+            sizeX,
+            sizeY,
+            sizeZ
+        );
+
         meshFilter.sharedMesh = mesh;
     }
 
@@ -276,6 +473,7 @@ public class VoxelObject : MonoBehaviour
         Gizmos.matrix = transform.localToWorldMatrix;
         Gizmos.color = new Color(0.2f, 0.8f, 1f, 0.3f);
         Gizmos.DrawCube(Vector3.zero, new Vector3(sx, sy, sz));
+
         Gizmos.color = new Color(0.2f, 0.8f, 1f, 1f);
         Gizmos.DrawWireCube(Vector3.zero, new Vector3(sx, sy, sz));
     }

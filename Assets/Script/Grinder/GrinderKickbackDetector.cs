@@ -20,7 +20,17 @@ public class GrinderKickbackDetector : MonoBehaviour
 
     [Header("메시지 설정")]
     [Tooltip("킥백 사고 발생 시 표시할 실패 메시지")]
-    [SerializeField] private string failMessage = "킥백 사고!\n그라인더가 튕겨나왔습니다.";
+    [TextArea(4, 12)]
+    [SerializeField]
+    private string failMessage =
+        "킥백 사고 발생!\n\n" +
+        "그라인더 날이 재료에 끼이거나 무리한 압력이 가해져\n" +
+        "공구가 작업자 방향으로 튕겨 나왔습니다.\n\n" +
+        "킥백은 순간적으로 발생하며 손, 팔, 얼굴 부위에\n" +
+        "심각한 절상이나 골절 사고를 유발할 수 있습니다.\n\n" +
+        "작업 중에는 무리하게 힘을 주지 말고,\n" +
+        "그라인더를 양손으로 단단히 잡은 상태에서\n" +
+        "절단 방향과 안전거리를 반드시 유지해야 합니다.";
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI countdownText;
@@ -69,6 +79,7 @@ public class GrinderKickbackDetector : MonoBehaviour
         else
         {
             noContactTimer += Time.deltaTime;
+
             if (noContactTimer >= contactGracePeriod)
                 ResetContact();
         }
@@ -81,21 +92,28 @@ public class GrinderKickbackDetector : MonoBehaviour
             foreach (var voxel in targets)
             {
                 if (voxel == null) continue;
+
                 var col = voxel.GetComponent<Collider>();
                 if (col == null) continue;
-                if (IsInsideCylinder(col.bounds.ClosestPoint(WorldCenter))) return true;
+
+                if (IsInsideCylinder(col.bounds.ClosestPoint(WorldCenter)))
+                    return true;
             }
         }
         else
         {
             float broadRadius = Mathf.Max(cylinderRadius, cylinderHalfHeight) * 2f;
             Collider[] hits = Physics.OverlapSphere(WorldCenter, broadRadius);
+
             foreach (var col in hits)
             {
                 if (col.GetComponent<VoxelObject>() == null) continue;
-                if (IsInsideCylinder(col.bounds.ClosestPoint(WorldCenter))) return true;
+
+                if (IsInsideCylinder(col.bounds.ClosestPoint(WorldCenter)))
+                    return true;
             }
         }
+
         return false;
     }
 
@@ -104,12 +122,14 @@ public class GrinderKickbackDetector : MonoBehaviour
         Vector3 diff = worldPos - WorldCenter;
         float alongAxis = Vector3.Dot(diff, transform.up);
         Vector3 radialVec = diff - alongAxis * transform.up;
+
         return Mathf.Abs(alongAxis) < cylinderHalfHeight && radialVec.magnitude < cylinderRadius;
     }
 
     private void UpdateCountdownText()
     {
         if (countdownText == null) return;
+
         countdownText.text = "킥백 사고 위험";
     }
 
@@ -117,6 +137,7 @@ public class GrinderKickbackDetector : MonoBehaviour
     {
         contactTimer = 0f;
         noContactTimer = 0f;
+
         if (countdownText != null)
             countdownText.text = "";
     }
@@ -145,8 +166,10 @@ public class GrinderKickbackDetector : MonoBehaviour
         Vector3 axis = transform.up;
 
         Vector3 perp1 = Vector3.Cross(axis, Vector3.up).normalized;
+
         if (perp1.sqrMagnitude < 0.001f)
             perp1 = Vector3.Cross(axis, Vector3.right).normalized;
+
         Vector3 perp2 = Vector3.Cross(axis, perp1).normalized;
 
         Vector3 top = center + axis * cylinderHalfHeight;
@@ -156,6 +179,7 @@ public class GrinderKickbackDetector : MonoBehaviour
         DrawCircle(bot, perp1, perp2, cylinderRadius);
 
         int lines = 8;
+
         for (int i = 0; i < lines; i++)
         {
             float angle = i * 2f * Mathf.PI / lines;
@@ -170,8 +194,10 @@ public class GrinderKickbackDetector : MonoBehaviour
         {
             float a1 = i * 2f * Mathf.PI / segments;
             float a2 = (i + 1) * 2f * Mathf.PI / segments;
+
             Vector3 p1 = center + (Mathf.Cos(a1) * perp1 + Mathf.Sin(a1) * perp2) * radius;
             Vector3 p2 = center + (Mathf.Cos(a2) * perp1 + Mathf.Sin(a2) * perp2) * radius;
+
             Gizmos.DrawLine(p1, p2);
         }
     }

@@ -141,6 +141,12 @@ public class HammerMotionHapticController : MonoBehaviour
 
     public bool TryHammerHit(Collider hitCollider)
     {
+        if (SafetyPracticeManager.Instance != null &&
+            SafetyPracticeManager.Instance.IsFailing)
+        {
+            return false;
+        }
+
         if (!isGrabbed)
             return false;
 
@@ -164,6 +170,15 @@ public class HammerMotionHapticController : MonoBehaviour
 
         PlayHammerHitSound();
         SendHammerHitHaptic();
+
+        if (SafetyPracticeManager.Instance != null)
+        {
+            if (SafetyPracticeManager.Instance.TryFailIfNoGlove())
+            {
+                Debug.Log("[HammerMotionHapticController] 보호구 미착용 상태에서 망치 타격. 타격음 재생 후 실패 처리");
+                return false;
+            }
+        }
 
         if (showDebugLog)
         {
