@@ -18519,6 +18519,28 @@ AudioSource:
     m_RotationOrder: 4
 --- !u!114 &1296365896648965674
 MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9089795373365635515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ab14dbd86ef0ca41bf8a483f1d9f6eb, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::DrillBitBreakAccident
+  playerHead: {fileID: 0}
+  drillTip: {fileID: 1567437458264339743}
+  bloodEffectPrefab: {fileID: 3723186245368743947, guid: a46e58915c3fa5b4f9fd597d3355860a, type: 3}
+  toastController: {fileID: 0}
+  bitSnapSound: {fileID: 8300000, guid: 1bd5c7a7816a3be478f42523baeb79cd, type: 3}
+  bloodSquirtSound: {fileID: 8300000, guid: 3460f54429dadcc48ae74fed7f93f104, type: 3}
+  screamSound: {fileID: 8300000, guid: 204e85e0530e90647bca6fcd853eb6d6, type: 3}
+  fadeOutSound: {fileID: 8300000, guid: 2e2d664725b62fc45af2f5a36713ca3f, type: 3}
+  maxSafeAngle: 15
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &883756811952186387
 MonoBehaviour:
   m_ObjectHideFlags: 0
