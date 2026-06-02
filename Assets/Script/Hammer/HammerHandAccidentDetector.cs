@@ -2,6 +2,7 @@ using UnityEngine;
 
 // Hammer 오브젝트(HammerMotionHapticController와 같은 GameObject)에 붙인다.
 // 매 프레임 망치머리 위치가 왼손 근처인지 거리로 체크한다.
+
 public class HammerHandAccidentDetector : MonoBehaviour
 {
     [Header("References")]

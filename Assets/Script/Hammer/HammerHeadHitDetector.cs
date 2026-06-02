@@ -1,3 +1,6 @@
+// HammerHeadHitDetector.cs
+// 해머 헤드가 충돌을 감지하여 HammerMotionHapticController에 전달하는 스크립트
+
 using UnityEngine;
 
 public class HammerHeadHitDetector : MonoBehaviour
