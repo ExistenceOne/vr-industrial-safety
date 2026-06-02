@@ -2,10 +2,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.Interaction.Toolkit.Inputs.Readers;
 
-/// <summary>
-/// Toggles a world-space pause menu when the Vive menu button is pressed.
-/// Attach to any persistent GameObject in the scene and wire up the serialized fields.
-/// </summary>
 public class PauseMenuController : MonoBehaviour
 {
     [Header("Input")]
@@ -21,6 +17,9 @@ public class PauseMenuController : MonoBehaviour
     [Header("Camera")]
     [SerializeField] Camera xrCamera;
 
+    [Header("Auto Respawn")]
+    [SerializeField] float fallThreshold = -10f;
+
     bool m_PrevPressed;
     bool m_IsOpen;
 
@@ -32,8 +31,14 @@ public class PauseMenuController : MonoBehaviour
         if (xrCamera == null)
             xrCamera = Camera.main;
 
-        if (menuPanel != null)
+        if (menuPanel != null && xrCamera != null)
+        {
+            // Parent the panel to the camera so it always follows the player's view
+            menuPanel.transform.SetParent(xrCamera.transform, false);
+            menuPanel.transform.localPosition = new Vector3(0f, 0f, menuDistance);
+            menuPanel.transform.localRotation = Quaternion.identity;
             menuPanel.SetActive(false);
+        }
     }
 
     void Update()
@@ -44,31 +49,17 @@ public class PauseMenuController : MonoBehaviour
             ToggleMenu();
 
         m_PrevPressed = pressed;
+
+        if (xrCamera != null && xrCamera.transform.position.y < fallThreshold)
+            Respawn();
     }
 
     void ToggleMenu()
     {
         m_IsOpen = !m_IsOpen;
-
-        if (m_IsOpen && menuPanel != null && xrCamera != null)
-            PlaceMenuInFrontOfCamera();
-
         menuPanel?.SetActive(m_IsOpen);
     }
 
-    void PlaceMenuInFrontOfCamera()
-    {
-        Transform cam = xrCamera.transform;
-        // Keep the menu level (no pitch), just face the player horizontally
-        Vector3 forward = new Vector3(cam.forward.x, 0f, cam.forward.z).normalized;
-        if (forward == Vector3.zero)
-            forward = Vector3.forward;
-
-        menuPanel.transform.position = cam.position + forward * menuDistance;
-        menuPanel.transform.rotation = Quaternion.LookRotation(forward);
-    }
-
-    // Call from the Respawn button's OnClick event
     public void Respawn()
     {
         m_IsOpen = false;
@@ -76,7 +67,6 @@ public class PauseMenuController : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    // Call from the Main Menu button's OnClick event
     public void LoadMainMenu()
     {
         SceneManager.LoadScene(mainSceneName);
