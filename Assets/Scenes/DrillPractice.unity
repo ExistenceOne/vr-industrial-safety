@@ -1414,6 +1414,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40bb752920f39ae4daaf53af82cdd069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ToastMessageController
+--- !u!4 &1502261221 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1893990429124621158, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+  m_PrefabInstance: {fileID: 4235823976769552342}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1552897835 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8145003471116348910, guid: 2678f0ebba01fb14faf6786347518c04, type: 3}
@@ -1623,6 +1628,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1821628603}
   m_CullTransparentMesh: 1
+--- !u!114 &2067196592 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8720975579179923007, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+  m_PrefabInstance: {fileID: 4235823976769552342}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable
 --- !u!4 &2079368815 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3215633288554560210, guid: b71387b5536f352419b8518e64d4e9da, type: 3}
@@ -2334,6 +2350,26 @@ PrefabInstance:
       propertyPath: toastController
       value: 
       objectReference: {fileID: 1420299307}
+    - target: {fileID: 1893990429124621158, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.8836355
+      objectReference: {fileID: 0}
+    - target: {fileID: 1893990429124621158, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.4599915
+      objectReference: {fileID: 0}
+    - target: {fileID: 1893990429124621158, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.04024406
+      objectReference: {fileID: 0}
+    - target: {fileID: 1893990429124621158, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.077308126
+      objectReference: {fileID: 0}
+    - target: {fileID: 1893990429124621158, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -55
+      objectReference: {fileID: 0}
     - target: {fileID: 2466594218213164375, guid: c848e16ce1ad8a043bf227a67447871d, type: 3}
       propertyPath: drillDepthQuest
       value: 
@@ -2583,7 +2619,7 @@ PrefabInstance:
     - target: {fileID: 572314769923083090, guid: b71387b5536f352419b8518e64d4e9da, type: 3}
       propertyPath: m_GrabbedObject
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2067196592}
     - target: {fileID: 1695538172019533442, guid: b71387b5536f352419b8518e64d4e9da, type: 3}
       propertyPath: m_Camera
       value: 
@@ -2604,6 +2640,10 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 747528643344703582}
+    - target: {fileID: 5484125679163234994, guid: b71387b5536f352419b8518e64d4e9da, type: 3}
+      propertyPath: m_GripTransform
+      value: 
+      objectReference: {fileID: 1502261221}
     - target: {fileID: 5807982745115529649, guid: b71387b5536f352419b8518e64d4e9da, type: 3}
       propertyPath: m_InteractionManager
       value: 
@@ -2692,7 +2732,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: XR Origin (XR Rig)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5484125679163234994, guid: b71387b5536f352419b8518e64d4e9da, type: 3}
     m_RemovedGameObjects:
     - {fileID: 4251563565339063699, guid: b71387b5536f352419b8518e64d4e9da, type: 3}
     - {fileID: 3229393496027305640, guid: b71387b5536f352419b8518e64d4e9da, type: 3}
