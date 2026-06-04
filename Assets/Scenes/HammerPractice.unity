@@ -1414,6 +1414,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1978948789 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7340022673465277463, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
+  m_PrefabInstance: {fileID: 1640051221924049122}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.XR.Interaction.Toolkit::UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable
 --- !u!114 &2019086811 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4287446155414347157, guid: e30dee6f02d8e0d40a9b2a80b0f7773d, type: 3}
@@ -2242,7 +2253,7 @@ PrefabInstance:
     - target: {fileID: 3556728492379124113, guid: 189b1bcaf01595041ada78c2cca57ed2, type: 3}
       propertyPath: m_GrabbedObject
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1978948789}
     - target: {fileID: 3562867904784085969, guid: 189b1bcaf01595041ada78c2cca57ed2, type: 3}
       propertyPath: m_Name
       value: QuestTitleText
