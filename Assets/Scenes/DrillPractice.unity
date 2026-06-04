@@ -3049,11 +3049,11 @@ PrefabInstance:
       objectReference: {fileID: 1206948163}
     - target: {fileID: 2566247596086612393, guid: 689425acc2d0de442a0d9f12bf8746b4, type: 3}
       propertyPath: trembleDuration
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2566247596086612393, guid: 689425acc2d0de442a0d9f12bf8746b4, type: 3}
       propertyPath: trembleMagnitude
-      value: 0.02
+      value: 0.015
       objectReference: {fileID: 0}
     - target: {fileID: 2566247596086612393, guid: 689425acc2d0de442a0d9f12bf8746b4, type: 3}
       propertyPath: drillInteractable
