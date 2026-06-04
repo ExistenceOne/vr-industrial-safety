@@ -3012,6 +3012,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2566247596086612393, guid: 689425acc2d0de442a0d9f12bf8746b4, type: 3}
+      propertyPath: overDrillFailSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 280dba4920a13d046865e2b703f1eab8, type: 3}
+    - target: {fileID: 2566247596086612393, guid: 689425acc2d0de442a0d9f12bf8746b4, type: 3}
       propertyPath: overDrillFailMessage
       value: "\uC9C0\uC815 \uAE4A\uC774\uB97C \uCD08\uACFC\uD558\uC5EC \uCC9C\uACF5\uD588\uC2B5\uB2C8\uB2E4.\r\n\uBCBD
         \uB0B4\uBD80 \uC804\uC120\uC744 \uC190\uC0C1\uC2DC\uCF1C \uAC10\uC804 \uC0AC\uACE0\uAC00

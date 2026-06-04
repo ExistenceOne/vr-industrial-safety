@@ -48,6 +48,9 @@ public class DrillDepthQuest : MonoBehaviour, IQuest
         "지정된 깊이까지만 천공하여\n" +
         "벽 내부 전선 손상을 방지했습니다.";
 
+    [Header("과천공 실패 사운드")]
+    [SerializeField] private AudioClip overDrillFailSound;
+
     [Header("과천공 실패 메시지")]
     [SerializeField, TextArea(4, 10)]
     private string overDrillFailMessage =
@@ -303,6 +306,9 @@ public class DrillDepthQuest : MonoBehaviour, IQuest
         {
             Debug.Log($"[DrillDepthQuest] 과천공 실패 발생 / 현재 진행률: {currentPercent:F1}%");
         }
+
+        if (overDrillFailSound != null)
+            AudioSource.PlayClipAtPoint(overDrillFailSound, transform.position);
 
         SafetyPracticeManager.Instance?.TryFailAlways(overDrillFailMessage);
 
