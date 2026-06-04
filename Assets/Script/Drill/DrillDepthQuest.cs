@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class DrillDepthQuest : MonoBehaviour, IQuest
 {
@@ -47,6 +48,22 @@ public class DrillDepthQuest : MonoBehaviour, IQuest
         "안전 깊이 천공 완료!\n" +
         "지정된 깊이까지만 천공하여\n" +
         "벽 내부 전선 손상을 방지했습니다.";
+
+    [Header("과천공 실패 - 인터랙션 차단")]
+    [Tooltip("사고 발생 시 강제로 놓을 드릴 XRGrabInteractable")]
+    [SerializeField] private XRGrabInteractable drillInteractable;
+    [Tooltip("사고 발생 시 비활성화할 플레이어 인터렉터 목록 (XRDirectInteractor 등)")]
+    [SerializeField] private List<Behaviour> interactorsToDisable = new();
+
+    [Header("과천공 실패 - 컨트롤러 진동 연출")]
+    [Tooltip("진동 연출을 적용할 왼쪽 컨트롤러 Transform")]
+    [SerializeField] private Transform leftController;
+    [Tooltip("진동 연출을 적용할 오른쪽 컨트롤러 Transform")]
+    [SerializeField] private Transform rightController;
+    [Tooltip("진동 지속 시간 (초)")]
+    [SerializeField] private float trembleDuration = 0.5f;
+    [Tooltip("진동 크기 (미터 단위 최대 오프셋)")]
+    [SerializeField] private float trembleMagnitude = 0.02f;
 
     [Header("과천공 실패 사운드")]
     [SerializeField] private AudioClip overDrillFailSound;
@@ -304,6 +321,15 @@ public class DrillDepthQuest : MonoBehaviour, IQuest
             entry.isFailed = true;
         }
 
+        if (drillInteractable != null)
+            drillInteractable.enabled = false;
+
+        foreach (var interactor in interactorsToDisable)
+        {
+            if (interactor != null)
+                interactor.enabled = false;
+        }
+
         if (showDebugLog)
         {
             Debug.Log($"[DrillDepthQuest] 과천공 실패 발생 / 현재 진행률: {currentPercent:F1}%");
@@ -312,8 +338,32 @@ public class DrillDepthQuest : MonoBehaviour, IQuest
         if (overDrillFailSound != null)
             AudioSource.PlayClipAtPoint(overDrillFailSound, transform.position, soundVolume);
 
+        if (leftController != null || rightController != null)
+            StartCoroutine(TrembleControllersRoutine());
+
         SafetyPracticeManager.Instance?.TryFailAlways(overDrillFailMessage);
 
         this.enabled = false;
+    }
+
+    private IEnumerator TrembleControllersRoutine()
+    {
+        Vector3 leftOrigin  = leftController  != null ? leftController.localPosition  : Vector3.zero;
+        Vector3 rightOrigin = rightController != null ? rightController.localPosition : Vector3.zero;
+
+        float elapsed = 0f;
+        while (elapsed < trembleDuration)
+        {
+            Vector3 offset = Random.insideUnitSphere * trembleMagnitude;
+
+            if (leftController  != null) leftController.localPosition  = leftOrigin  + offset;
+            if (rightController != null) rightController.localPosition = rightOrigin + offset;
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        if (leftController  != null) leftController.localPosition  = leftOrigin;
+        if (rightController != null) rightController.localPosition = rightOrigin;
     }
 }
