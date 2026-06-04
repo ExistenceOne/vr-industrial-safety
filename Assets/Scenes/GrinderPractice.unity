@@ -8890,6 +8890,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 727781489}
     - target: {fileID: 9016376206743260124, guid: 86e65480d18de5f48bab951314ce8b97, type: 3}
+      propertyPath: safetyGearRoot
+      value: 
+      objectReference: {fileID: 8123088211884265140}
+    - target: {fileID: 9016376206743260124, guid: 86e65480d18de5f48bab951314ce8b97, type: 3}
       propertyPath: fadeCanvasGroup
       value: 
       objectReference: {fileID: 2234500003}
@@ -9496,6 +9500,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 811369795}
   m_SourcePrefab: {fileID: 100100000, guid: 51c6dcc7aeffe2342bb8d940f9f0e757, type: 3}
+--- !u!4 &8123088211884265140 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1983092055306384991, guid: 51c6dcc7aeffe2342bb8d940f9f0e757, type: 3}
+  m_PrefabInstance: {fileID: 8123088211884265139}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8221414586722647214
 PrefabInstance:
   m_ObjectHideFlags: 0

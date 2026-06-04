@@ -305,6 +305,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1155592450}
     - target: {fileID: 9016376206743260124, guid: 86e65480d18de5f48bab951314ce8b97, type: 3}
+      propertyPath: safetyGearRoot
+      value: 
+      objectReference: {fileID: 1640051221924049123}
+    - target: {fileID: 9016376206743260124, guid: 86e65480d18de5f48bab951314ce8b97, type: 3}
       propertyPath: fadeCanvasGroup
       value: 
       objectReference: {fileID: 6360247338377000894}
@@ -1199,6 +1203,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
+--- !u!4 &1640051221924049123 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7938956743206811482, guid: 59356d99baf71fe4981aaf32284f69a1, type: 3}
+  m_PrefabInstance: {fileID: 1640051221924049122}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3141671193112209313
 PrefabInstance:
   m_ObjectHideFlags: 0

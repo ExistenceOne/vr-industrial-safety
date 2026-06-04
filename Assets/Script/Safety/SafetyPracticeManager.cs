@@ -21,6 +21,11 @@ public class SafetyPracticeManager : MonoBehaviour
     [Header("Safety Gear State")]
     [SerializeField] private bool isGloveEquipped = false;
 
+    [Tooltip("보안경, 장갑 등 보호구들이 들어있는 부모 오브젝트를 연결하세요.")]
+    [SerializeField] private Transform safetyGearRoot;
+
+    [SerializeField] private bool showGearCheckDebugLog = true;
+
     [Header("UI")]
     [SerializeField] private ToastMessageController toastController;
     [SerializeField] private CanvasGroup fadeCanvasGroup;
@@ -408,6 +413,44 @@ public class SafetyPracticeManager : MonoBehaviour
         if (isGloveEquipped)
             return;
 
+        StartCoroutine(CheckAllSafetyGearEquippedNextFrame());
+    }
+
+    private IEnumerator CheckAllSafetyGearEquippedNextFrame()
+    {
+        // 보호구 오브젝트가 Destroy 또는 부모에서 제거된 뒤 검사하기 위해 한 프레임 대기
+        yield return null;
+
+        CheckAllSafetyGearEquipped();
+    }
+
+    private void CheckAllSafetyGearEquipped()
+    {
+        if (safetyGearRoot == null)
+        {
+            Debug.LogWarning("[SafetyPracticeManager] safetyGearRoot가 연결되지 않았습니다.");
+            return;
+        }
+
+        int remainingGearCount = safetyGearRoot.childCount;
+
+        if (showGearCheckDebugLog)
+        {
+            Debug.Log($"[SafetyPracticeManager] 남아있는 보호구 개수: {remainingGearCount}");
+        }
+
+        // 부모 안에 보호구 자식이 하나도 없으면 모든 보호구 착용 완료
+        if (remainingGearCount <= 0)
+        {
+            CompleteSafetyGearEquip();
+        }
+    }
+
+    private void CompleteSafetyGearEquip()
+    {
+        if (isGloveEquipped)
+            return;
+
         isGloveEquipped = true;
 
         if (toastController != null)
@@ -424,7 +467,7 @@ public class SafetyPracticeManager : MonoBehaviour
 
         if (showDebugLog)
         {
-            Debug.Log("[SafetyPracticeManager] 보호장갑 착용 완료");
+            Debug.Log("[SafetyPracticeManager] 모든 보호구 착용 완료");
         }
     }
 
