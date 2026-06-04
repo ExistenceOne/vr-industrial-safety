@@ -50,6 +50,8 @@ public class DrillDepthQuest : MonoBehaviour, IQuest
 
     [Header("과천공 실패 사운드")]
     [SerializeField] private AudioClip overDrillFailSound;
+    [Tooltip("모든 사고 효과음 볼륨 (0~1)")]
+    [SerializeField] [Range(0f, 1f)] private float soundVolume = 0.1f;
 
     [Header("과천공 실패 메시지")]
     [SerializeField, TextArea(4, 10)]
@@ -308,7 +310,7 @@ public class DrillDepthQuest : MonoBehaviour, IQuest
         }
 
         if (overDrillFailSound != null)
-            AudioSource.PlayClipAtPoint(overDrillFailSound, transform.position);
+            AudioSource.PlayClipAtPoint(overDrillFailSound, transform.position, soundVolume);
 
         SafetyPracticeManager.Instance?.TryFailAlways(overDrillFailMessage);
 
